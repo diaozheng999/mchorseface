@@ -76,6 +76,7 @@
     <Compile Include="Assets\PGT\Scripts\Core\SyncMonoBehaviour.cs" />
     <Compile Include="Assets\PGT\Scripts\Core\Tuple.cs" />
     <Compile Include="Assets\PGT\Scripts\Core\UnityExecutionThread.cs" />
+    <Compile Include="Assets\Scripts\DemoController.cs" />
     <Compile Include="Assets\Scripts\DemoCube.cs" />
     <Compile Include="Assets\Scripts\WiimoteCalibrator.cs" />
     <Compile Include="Assets\Scripts\WiimoteController.cs" />

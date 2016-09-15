@@ -6,24 +6,40 @@ namespace McHorseface.LawnDart
 {
     public class DemoCube : MonoBehaviour
     {
+        Rigidbody rb;
+        Transform tf;
 
+        bool wiimoteCalibrated = false;
         // Use this for initialization
         void Start()
         {
-            EventRegistry.instance.AddEventListener(WiimoteController.WIIMOTE_BUTTON_A_UP, () =>
-            {
-                transform.position = Vector3.zero;
-            }, true);
+            
 
             enabled = false;
+            rb = GetComponent<Rigidbody>();
 
-            EventRegistry.instance.AddEventListener(WiimoteController.WIIMOTE_CALIBRATED, () => enabled = true);
+            tf = transform;
+
+            EventRegistry.instance.AddEventListener(WiimoteController.WIIMOTE_CALIBRATED, OnWiimoteCalibrated);
         }
 
-        // Update is called once per frame
-        void Update()
+        void OnWiimoteCalibrated()
         {
-            transform.position =  2f * WiimoteController.instance.Accel;
+            EventRegistry.instance.AddEventListener(WiimoteController.WIIMOTE_BUTTON_B_UP, () =>
+            {
+                var dup = GameObject.Instantiate<GameObject>(gameObject);
+                dup.transform.position = tf.position;
+                dup.transform.rotation = tf.rotation;
+
+                if(wiimoteCalibrated)
+                    dup.GetComponent<DemoCube>().OnWiimoteCalibrated();
+
+                //push this off
+                this.rb.isKinematic = false;
+                this.rb.AddForce(WiimoteController.instance.Accel);
+            });
+            wiimoteCalibrated = true;
         }
+        
     }
 }

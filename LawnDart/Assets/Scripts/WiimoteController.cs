@@ -53,6 +53,10 @@ namespace McHorseface.LawnDart
 
         public Vector3 Accel = Vector3.zero;
 
+        // whether we are moving or not
+        bool stable = false;
+
+        public bool Stable { get { return stable; } }
 
 	    // Update is called once per frame
 	    void Update () {
@@ -89,10 +93,25 @@ namespace McHorseface.LawnDart
             var _accel = Vector3.zero;
 
             _accel.x = accel[0];
-            _accel.y = -accel[1];
-            _accel.z = accel[2];
+            _accel.y = -accel[2];
+            _accel.z = accel[1];
 
-            Accel = (Accel + _accel) / 2; 
+            Accel = (Accel + _accel) / 2;
+
+            var mag = Accel.sqrMagnitude;
+
+            if(mag < 1.2 && mag > 0.8 && !stable)
+            {
+                Debug.Log("Stabalised");
+                Debug.Log(mag);
+                stable = true;
+            }
+            else if ((mag > 1.2 || mag < 0.8) && stable)
+            {
+                Debug.Log("Moving");
+                Debug.Log(mag);
+                stable = false;
+            }
 	    }
     }
 

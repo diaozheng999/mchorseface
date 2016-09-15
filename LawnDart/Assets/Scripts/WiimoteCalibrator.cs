@@ -15,6 +15,8 @@ namespace McHorseface.LawnDart
 {
     public class WiimoteCalibrator : MonoBehaviour
     {
+        const string NEXT = "calib_next";
+
 
         Wiimote wiimote;
         [SerializeField] 
@@ -62,7 +64,7 @@ namespace McHorseface.LawnDart
                     calibrationSteps[j].SetActive(i == j);
                 }
                 // wait for the button-press
-                yield return new WaitForEvent(WiimoteController.WIIMOTE_BUTTON_B_DOWN);
+                yield return new WaitForEvent(NEXT);
 
                 // set calibration point
                 wiimote.Accel.CalibrateAccel((AccelCalibrationStep)i);
@@ -86,6 +88,14 @@ namespace McHorseface.LawnDart
                 yield return new WaitForSeconds(pingDuration);
             }
             EventRegistry.instance.Invoke(WiimoteController.WIIMOTE_DETECTED);
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.Return))
+            {
+                EventRegistry.instance.Invoke(NEXT);
+            }
         }
     }
 
