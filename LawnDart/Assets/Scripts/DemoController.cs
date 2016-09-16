@@ -21,18 +21,23 @@ namespace McHorseface.LawnDart
                 var rb = dup.GetComponent<Rigidbody>();
                 rb.isKinematic = false;
                 rb.transform.rotation = transform.rotation;
-                rb.AddRelativeForce(WiimoteController.instance.Accel, ForceMode.Impulse);
-                rb.useGravity = false;
+
+                Vector3 gravity = rb.transform.InverseTransformVector(Vector3.down);
+
+                rb.AddRelativeForce(WiimoteController.instance.Accel - gravity, ForceMode.Impulse);
                 Debug.Log(WiimoteController.instance.Accel);
+
+                EventRegistry.instance.SetTimeout(20f, () =>
+                {
+                    Destroy(dup);
+                });
             }, true);
         }
 
         void Update()
         {
-            if (WiimoteController.instance.Stable)
-            {
-                transform.rotation = Quaternion.FromToRotation(WiimoteController.instance.Accel, Vector3.down);
-            }
+            //transform.rotation = Quaternion.FromToRotation(WiimoteController.instance.Accel, Vector3.down);
+            transform.rotation = WiimoteController.instance.Rot;
         }
 
     }

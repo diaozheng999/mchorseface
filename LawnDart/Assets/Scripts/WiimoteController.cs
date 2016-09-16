@@ -58,14 +58,27 @@ namespace McHorseface.LawnDart
 
         public bool Stable { get { return stable; } }
 
+        Quaternion rot = Quaternion.identity;
+
+        public Quaternion Rot { get { return rot; } }
+
 	    // Update is called once per frame
 	    void Update () {
+            Vector3 wmpOffset = Vector3.zero;
             do
             {
                 wiimoteReturnCode = wiimote.ReadWiimoteData();
+                if(wiimoteReturnCode > 0 && wiimote.current_ext == ExtensionController.MOTIONPLUS) {
+                    Vector3 offset = new Vector3(   wiimote.MotionPlus.PitchSpeed,
+                                                  - wiimote.MotionPlus.YawSpeed,
+                                                    wiimote.MotionPlus.RollSpeed) / 95f; // Divide by 95Hz (average updates per second from wiimote)
+                    wmpOffset += offset;
+                    
+                }
             } while (wiimoteReturnCode > 0);
-            
-            if(wiimote.Button.a != prevADown)
+            rot = Quaternion.Euler(wmpOffset) * rot;
+
+            if (wiimote.Button.a != prevADown)
             {
                 prevADown = wiimote.Button.a;
                 EventRegistry.instance.Invoke(prevADown ? WIIMOTE_BUTTON_A_DOWN : WIIMOTE_BUTTON_A_UP);
@@ -100,18 +113,20 @@ namespace McHorseface.LawnDart
 
             var mag = Accel.sqrMagnitude;
 
-            if(mag < 1.2 && mag > 0.8 && !stable)
+            if(mag < 1.2 && mag > 0.8)
             {
-                Debug.Log("Stabalised");
-                Debug.Log(mag);
-                stable = true;
-            }
-            else if ((mag > 1.2 || mag < 0.8) && stable)
+                // stabalised
+                rot = Quaternion.Slerp(rot, Quaternion.FromToRotation(Accel, Vector3.down), 5f*Time.deltaTime);
+                if (!stable)
+                {
+                    stable = true;
+                }
+            }else if (stable)
             {
-                Debug.Log("Moving");
-                Debug.Log(mag);
                 stable = false;
             }
+
+            
 	    }
     }
 

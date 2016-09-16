@@ -43,8 +43,12 @@ namespace McHorseface.LawnDart
             // assume that there's 1 wiimote
             wiimote = WiimoteManager.Wiimotes[0];
 
-            // set the propagation mode
+            // set data reporting mode
             wiimote.SendDataReportMode(wiimoteDataReportMode);
+            wiimote.ActivateWiiMotionPlus();
+
+            // set the propagation mode
+            StartCoroutine(CycleLED());
 
             // set initialised mode
             EventRegistry.instance.Invoke(WiimoteController.WIIMOTE_INITIALISED);
@@ -95,6 +99,16 @@ namespace McHorseface.LawnDart
             if (Input.GetKeyUp(KeyCode.Return))
             {
                 EventRegistry.instance.Invoke(NEXT);
+            }
+        }
+
+
+        UnityCoroutine CycleLED()
+        {
+            for(byte i=0; ; i++)
+            {
+                wiimote.SendPlayerLED((i & 8) == 8, (i & 4) == 4, (i & 2) == 2, (i & 1) == 1);
+                yield return new WaitForSeconds(1);
             }
         }
     }
