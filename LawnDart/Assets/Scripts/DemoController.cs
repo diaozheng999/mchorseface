@@ -7,7 +7,7 @@ namespace McHorseface.LawnDart
     public class DemoController : MonoBehaviour
     {
         [SerializeField] GameObject throwable;
-            
+		[SerializeField] float scaleFactor;
         void Start()
         {
             EventRegistry.instance.AddEventListener(WiimoteController.WIIMOTE_CALIBRATED, OnWiimoteCalibrated);
@@ -21,10 +21,11 @@ namespace McHorseface.LawnDart
                 var rb = dup.GetComponent<Rigidbody>();
                 rb.isKinematic = false;
                 rb.transform.rotation = transform.rotation;
+				rb.transform.position = transform.position;
 
                 Vector3 gravity = rb.transform.InverseTransformVector(Vector3.down);
 
-                rb.AddRelativeForce(WiimoteController.instance.Accel - gravity, ForceMode.Impulse);
+					rb.AddRelativeForce((WiimoteController.instance.Accel - gravity) * scaleFactor, ForceMode.Impulse);
                 Debug.Log(WiimoteController.instance.Accel);
 
                 EventRegistry.instance.SetTimeout(20f, () =>
