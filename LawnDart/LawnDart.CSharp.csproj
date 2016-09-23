@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\DemoCube.cs" />
     <Compile Include="Assets\Scripts\Extensions.cs" />
     <Compile Include="Assets\Scripts\LDController.cs" />
+    <Compile Include="Assets\Scripts\TutorialControl.cs" />
     <Compile Include="Assets\Scripts\WiimoteCalibrator.cs" />
     <Compile Include="Assets\Scripts\WiimoteController.cs" />
     <Compile Include="Assets\Wiimote\Scripts\Enums.cs" />
