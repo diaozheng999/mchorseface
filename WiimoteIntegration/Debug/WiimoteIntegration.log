@@ -1,0 +1,7 @@
+﻿  WiimoteIntegration.cpp
+  wiimote.cpp
+c:\users\zheng\documents\github\mchorseface\wiimoteintegration\wiimote.cpp(2692): warning C4838: conversion from 'int' to 'BYTE' requires a narrowing conversion
+c:\users\zheng\documents\github\mchorseface\wiimoteintegration\wiimote.cpp(2757): warning C4838: conversion from 'int' to 'BYTE' requires a narrowing conversion
+  Generating Code...
+  WiimoteIntegration.vcxproj -> C:\Users\Zheng\Documents\GitHub\mchorseface\WiimoteIntegration\Debug\WiimoteIntegration.exe
+  WiimoteIntegration.vcxproj -> C:\Users\Zheng\Documents\GitHub\mchorseface\WiimoteIntegration\Debug\WiimoteIntegration.pdb (Full PDB)
