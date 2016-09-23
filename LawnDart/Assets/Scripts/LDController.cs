@@ -28,27 +28,40 @@ namespace McHorseface.LawnDart
         const byte BTN_ON = 0x02;
         const byte BTN_OFF = 0x03;
         const byte ACCEL_UPDATE = 0x04;
+        const byte VIBRA = 0x05;
 
         public const string BUTTON_OFF = "ld_btn_off";
         public const string BUTTON_ON = "ld_btn_on";
+
+        public static LDController instance = null;
 
         [SerializeField]
         InputField IPAddressInput;
         NetworkStream stream;
 
         [SerializeField]
-        GameObject Dart;
+        GameObject Post;
 
         [SerializeField]
         GameObject Internal;
 
         [SerializeField]
         float ScaleFactor = 3f;
-
-        Vector3 pos;
+        
         Quaternion rot;
         Vector3 accel;
-        Semaphore sem;
+
+        Quaternion calibratedRotation;
+
+        // we're not locking cos rot and accel are not updated at all
+        public Quaternion Rot { get {
+                return rot;
+            }
+        }
+        public Vector3 Accel { get {
+                return accel;
+            }
+        }
 
         bool terminated = false;
         byte[] buffer;
@@ -56,6 +69,17 @@ namespace McHorseface.LawnDart
         {
             enabled = false;
             buffer = new byte[29];
+
+            if(instance != null)
+            {
+                Debug.Log("Another copy of LDController is present.");
+                Destroy(gameObject);
+                return;
+            }
+
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+            
         }
 
         public void Connect()
@@ -73,99 +97,21 @@ namespace McHorseface.LawnDart
             {
                 Debug.Log("Connection Error.");
             }
-
-            EventRegistry.instance.AddEventListener(BUTTON_OFF, () =>
-            {
-                var dup = Instantiate(Dart);
-                var rb = dup.GetComponent<Rigidbody>();
-                rb.isKinematic = false;
-                rb.transform.rotation = Internal.transform.rotation;
-                rb.transform.position = transform.position;
-
-                Vector3 gravity = rb.transform.InverseTransformVector(Vector3.down);
-
-                //rb.AddRelativeForce(force * rb.transform.forward, ForceMode.Impulse);
-
-                rb.AddRelativeForce(ScaleFactor * (accel - gravity), ForceMode.Impulse);
-                Debug.Log(accel);
-
-                EventRegistry.instance.SetTimeout(20f, () =>
-                {
-                    Destroy(dup);
-                });
-            }, true);
-            
         }
-        /*
-        UnityCoroutine NetworkListener()
+       
+        public void Calibrate()
         {
-            while (!terminated)
+            transform.rotation = Quaternion.FromToRotation(Post.transform.forward, Vector3.forward);
+        }
+
+        public void Vibrate()
+        {
+            if (stream != null && stream.CanWrite)
             {
-                var yield_instr = new YieldWhen();
-                stream.BeginRead(buffer, 0, 1, (IAsyncResult s) =>
-                {
-                    yield_instr.wait = false;
-                    stream.EndRead(s);
-                }, null);
-
-                yield return yield_instr;
-
-
-                switch (buffer[0])
-                {
-                    case POS_UPDATE:
-                        Debug.Log("Received POS_UPDATE");
-                        yield_instr = new YieldWhen();
-
-                        stream.BeginRead(buffer, 1, 28, (IAsyncResult s) =>
-                        {
-                            yield_instr.wait = false;
-                            stream.EndRead(s);
-                        }, null);
-                        yield return yield_instr;
-                        LogBytes(buffer);
-                        pos.x = BitConverter.ToSingle(buffer, 1);
-                        pos.y = BitConverter.ToSingle(buffer, 5);
-                        pos.z = BitConverter.ToSingle(buffer, 9);
-                        rot.x = BitConverter.ToSingle(buffer, 13);
-                        rot.y = BitConverter.ToSingle(buffer, 17);
-                        rot.z = BitConverter.ToSingle(buffer, 21);
-                        rot.w = BitConverter.ToSingle(buffer, 25);
-                        break;
-
-                    case ACCEL_UPDATE:
-                        Debug.Log("Received ACCEL_UPDATE");
-                        yield_instr = new YieldWhen();
-
-                        stream.BeginRead(buffer, 1, 12, (IAsyncResult s) =>
-                        {
-                            yield_instr.wait = false;
-                            stream.EndRead(s);
-                        }, null);
-                        yield return yield_instr;
-                        LogBytes(buffer);
-                        accel.x = BitConverter.ToSingle(buffer, 1);
-                        accel.y = BitConverter.ToSingle(buffer, 5);
-                        accel.z = BitConverter.ToSingle(buffer, 9);
-                        break;
-
-                    case BTN_OFF:
-                        Debug.Log("Received BTN_OFF");
-                        EventRegistry.instance.Invoke(BUTTON_OFF);
-                        break;
-
-                    case BTN_ON:
-                        Debug.Log("Received BTN_ON");
-                        EventRegistry.instance.Invoke(BUTTON_ON);
-                        break;
-
-                    default:
-                        Debug.Log("Unknown byte");
-                        break;
-                }
-                
+                stream.WriteByte(VIBRA);
+                stream.Flush();
             }
-        }*/
+        }
 
         void LogBytes(byte[] buffer)
         {
@@ -188,28 +134,30 @@ namespace McHorseface.LawnDart
                 {
                     case POS_UPDATE:
                         for (var i = 1; i < 29; i += stream.Read(buffer, i, 29 - i));
-                        pos.x = BitConverter.ToSingle(buffer, 1);
-                        pos.y = BitConverter.ToSingle(buffer, 5);
-                        pos.z = BitConverter.ToSingle(buffer, 9);
+
+                        accel.x = BitConverter.ToSingle(buffer, 1);
+                        accel.y = BitConverter.ToSingle(buffer, 5);
+                        accel.z = BitConverter.ToSingle(buffer, 9);
                         rot.x = BitConverter.ToSingle(buffer, 13);
                         rot.y = BitConverter.ToSingle(buffer, 17);
                         rot.z = BitConverter.ToSingle(buffer, 21);
                         rot.w = BitConverter.ToSingle(buffer, 25);
-                        break;
-
-                    case ACCEL_UPDATE:
-                        for (var i = 1; i < 13; i += stream.Read(buffer, i, 13 - i));
-                        accel.x = BitConverter.ToSingle(buffer, 1);
-                        accel.y = BitConverter.ToSingle(buffer, 5);
-                        accel.z = BitConverter.ToSingle(buffer, 9);
+ 
                         break;
 
                     case BTN_OFF:
-                        EventRegistry.instance.Invoke(BUTTON_OFF);
+                        // Event library is currently NOT thread-safe
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_OFF);
+                        });
                         break;
 
                     case BTN_ON:
-                        EventRegistry.instance.Invoke(BUTTON_ON);
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_ON);
+                        });
                         break;
 
                     default:
@@ -219,6 +167,10 @@ namespace McHorseface.LawnDart
             }
         }
 
+        public Quaternion GetCalibratedRotation()
+        {
+            return Post.transform.rotation;
+        }
 
         void OnDestroy()
         {
@@ -227,8 +179,7 @@ namespace McHorseface.LawnDart
 
 	    // Update is called once per frame
 	    void Update () {
-            transform.rotation = rot;
+            Internal.transform.localRotation = rot;
 	    }
     }
 }
-

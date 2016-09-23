@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\DemoController.cs" />
     <Compile Include="Assets\Scripts\DemoCube.cs" />
     <Compile Include="Assets\Scripts\Extensions.cs" />
+    <Compile Include="Assets\Scripts\LDCalibrator.cs" />
     <Compile Include="Assets\Scripts\LDController.cs" />
     <Compile Include="Assets\Scripts\TutorialControl.cs" />
     <Compile Include="Assets\Scripts\WiimoteCalibrator.cs" />
