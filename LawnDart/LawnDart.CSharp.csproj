@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\Extensions.cs" />
     <Compile Include="Assets\Scripts\LDCalibrator.cs" />
     <Compile Include="Assets\Scripts\LDController.cs" />
+    <Compile Include="Assets\Scripts\LawnDartLauncher.cs" />
     <Compile Include="Assets\Scripts\TutorialControl.cs" />
     <Compile Include="Assets\Scripts\WiimoteCalibrator.cs" />
     <Compile Include="Assets\Scripts\WiimoteController.cs" />

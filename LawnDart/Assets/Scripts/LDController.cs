@@ -43,6 +43,9 @@ namespace McHorseface.LawnDart
         GameObject Post;
 
         [SerializeField]
+        GameObject Sprite;
+
+        [SerializeField]
         GameObject Internal;
 
         [SerializeField]
@@ -79,6 +82,11 @@ namespace McHorseface.LawnDart
 
             DontDestroyOnLoad(gameObject);
             instance = this;
+
+            EventRegistry.instance.AddEventListener(LDCalibrator.CALIB_TRYOUT, () =>
+            {
+                Sprite.SetActive(false);
+            });
             
         }
 
@@ -101,7 +109,11 @@ namespace McHorseface.LawnDart
        
         public void Calibrate()
         {
+            transform.rotation = Quaternion.identity;
+
             transform.rotation = Quaternion.FromToRotation(Post.transform.forward, Vector3.forward);
+
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         }
 
         public void Vibrate()

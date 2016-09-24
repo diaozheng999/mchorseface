@@ -7,6 +7,8 @@ namespace McHorseface.LawnDart
 {
     public class LDCalibrator : MonoBehaviour {
 
+        public const string CALIB_TRYOUT = "calib_tryout";
+
         [SerializeField]
         GameObject calibrationSlide;
         [SerializeField]
@@ -15,9 +17,14 @@ namespace McHorseface.LawnDart
         GameObject confirmationYes;
         [SerializeField]
         GameObject confirmationNo;
+        [SerializeField]
+        GameObject trySlide;
 
         AnimationController cfmYesAnim;
         AnimationController cfmNoAnim;
+
+        Vector3 cfmYesOrigin;
+        Vector3 cfmNoOrigin;
 
         enum ButtonState
         {
@@ -30,7 +37,8 @@ namespace McHorseface.LawnDart
 	    void Start () {
             cfmYesAnim = confirmationYes.GetComponent<AnimationController>();
             cfmNoAnim = confirmationNo.GetComponent<AnimationController>();
-
+            cfmYesOrigin = confirmationYes.transform.position;
+            cfmNoOrigin = confirmationNo.transform.position;
             StartCoroutine(CalibrationStart());
 	    }
 
@@ -42,6 +50,7 @@ namespace McHorseface.LawnDart
             confirmationSlide.SetActive(false);
             confirmationYes.SetActive(false);
             confirmationNo.SetActive(false);
+            trySlide.SetActive(false);
 
             enabled = false;
             EventRegistry.instance.AddEventListener(LDController.BUTTON_OFF, () =>
@@ -61,17 +70,42 @@ namespace McHorseface.LawnDart
             
                 enabled = true;
 
+                confirmationNo.transform.localScale = 0.005f * Vector3.one;
+                confirmationNo.transform.position = cfmNoOrigin;
+
+                confirmationYes.transform.localScale = 0.005f * Vector3.one;
+                confirmationYes.transform.position = cfmYesOrigin;
+
                 yield return new WaitForEvent(LDController.BUTTON_OFF);
             }
             if(buttonState == ButtonState.Yes)
             {
-                gameObject.SetActive(false);
-            }else
+                trySlide.SetActive(true);
+                confirmationSlide.SetActive(false);
+                confirmationYes.SetActive(false);
+                confirmationNo.SetActive(false);
+                EventRegistry.instance.Invoke(CALIB_TRYOUT);
+            }
+            else
             {
                 StartCoroutine(CalibrationStart());
             }
 
         }
+
+
+        void Scale(GameObject obj, AnimationController anim, Vector3 dest)
+        {
+            anim.RunAnimation(anim.Lerp(
+                () => obj.transform.localScale,
+                (Vector3 vec) => obj.transform.localScale = vec,
+                Vector3.Lerp,
+                (Vector3 vec1, Vector3 vec2) => 10000 * Vector3.SqrMagnitude(vec1 - vec2),
+                dest,
+                1f), true, AnimationController.LOCAL_SCALE);
+        }
+
+
 	
 	    // Update is called once per frame
 	    void Update () {
@@ -79,19 +113,19 @@ namespace McHorseface.LawnDart
             
             if (rot.x < -0.3 && buttonState != ButtonState.No)
             {
-                confirmationNo.transform.localScale = 0.007f * Vector3.one;
-                confirmationYes.transform.localScale = 0.005f * Vector3.one;
+                Scale(confirmationNo, cfmNoAnim, 0.007f * Vector3.one);
+                Scale(confirmationYes, cfmYesAnim, 0.005f * Vector3.one); 
                 buttonState = ButtonState.No;
 
             }else if(rot.x > 0.3 && buttonState != ButtonState.Yes)
             {
-                confirmationNo.transform.localScale = 0.005f * Vector3.one;
-                confirmationYes.transform.localScale = 0.007f * Vector3.one;
+                Scale(confirmationNo, cfmNoAnim, 0.005f * Vector3.one);
+                Scale(confirmationYes, cfmYesAnim, 0.007f * Vector3.one);
                 buttonState = ButtonState.Yes;
             }else if(rot.x < 0.3 && rot.x > -0.3 && buttonState != ButtonState.None)
             {
-                confirmationNo.transform.localScale = 0.005f * Vector3.one;
-                confirmationYes.transform.localScale = 0.005f * Vector3.one;
+                Scale(confirmationNo, cfmNoAnim, 0.005f * Vector3.one);
+                Scale(confirmationYes, cfmYesAnim, 0.005f * Vector3.one);
                 buttonState = ButtonState.None;
             }
 	    }
