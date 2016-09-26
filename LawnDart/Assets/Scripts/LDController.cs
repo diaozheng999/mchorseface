@@ -184,6 +184,11 @@ namespace McHorseface.LawnDart
             return Post.transform.rotation;
         }
 
+        public Quaternion GetInnerRotation()
+        {
+            return Post.transform.localRotation;
+        }
+
         void OnDestroy()
         {
             terminated = true;

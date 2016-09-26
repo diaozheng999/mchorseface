@@ -111,13 +111,13 @@ namespace McHorseface.LawnDart
 	    void Update () {
             Vector3 rot = LDController.instance.GetCalibratedRotation() * Vector3.forward;
             
-            if (rot.x < -0.3 && buttonState != ButtonState.No)
+            if (rot.x  > 0.3 && buttonState != ButtonState.No)
             {
                 Scale(confirmationNo, cfmNoAnim, 0.007f * Vector3.one);
                 Scale(confirmationYes, cfmYesAnim, 0.005f * Vector3.one); 
                 buttonState = ButtonState.No;
 
-            }else if(rot.x > 0.3 && buttonState != ButtonState.Yes)
+            }else if(rot.x < -0.3 && buttonState != ButtonState.Yes)
             {
                 Scale(confirmationNo, cfmNoAnim, 0.005f * Vector3.one);
                 Scale(confirmationYes, cfmYesAnim, 0.007f * Vector3.one);

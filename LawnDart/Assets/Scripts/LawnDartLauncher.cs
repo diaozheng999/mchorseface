@@ -13,6 +13,8 @@ namespace McHorseface.LawnDart
         GameObject dart;
         [SerializeField]
         float scaleFactor;
+        [SerializeField]
+        Quaternion innerRotation;
 
 
         int launch_event_listener;
@@ -21,6 +23,7 @@ namespace McHorseface.LawnDart
             enabled = false;
             sprite.SetActive(false);
 
+            innerRotation = Quaternion.Euler(new Vector3(0, -90f, 0));
             EventRegistry.instance.AddEventListener(LDCalibrator.CALIB_TRYOUT, Tryout);
 
         }
@@ -30,7 +33,7 @@ namespace McHorseface.LawnDart
             enabled = true;
             sprite.SetActive(true);
 
-            launch_event_listener = EventRegistry.instance.AddEventListener(LDController.BUTTON_OFF, LaunchDart);
+            launch_event_listener = EventRegistry.instance.AddEventListener(LDController.BUTTON_OFF, LaunchDart, true);
         }
 
         void Update()
@@ -43,21 +46,28 @@ namespace McHorseface.LawnDart
             enabled = false;
             sprite.SetActive(false);
 
-
             var dup = Instantiate(dart);
             dup.transform.position = transform.position;
-            dup.transform.rotation = transform.rotation;
-            var rb = dup.GetComponentInChildren<Rigidbody>();
+            dup.transform.rotation = LDController.instance.GetCalibratedRotation();
+            var rb = dup.GetComponent<Rigidbody>();
+            rb.position = transform.position;
+            rb.rotation = LDController.instance.GetCalibratedRotation();
 
-            Vector3 gravity = transform.InverseTransformVector(Vector3.down);
+            Vector3 gravity =  transform.InverseTransformVector(Vector3.down);
 
-            rb.AddRelativeForce(scaleFactor * (LDController.instance.Accel - gravity), ForceMode.Impulse);
+            rb.AddRelativeForce(scaleFactor * Vector3.Magnitude(LDController.instance.Accel - gravity) * Vector3.forward, ForceMode.VelocityChange);
+            //rb.AddTorque(transform.rotation.eulerAngles);
 
             // disable darts
             EventRegistry.instance.SetTimeout(1f, () =>
             {
                 enabled = true;
                 sprite.SetActive(true);
+            });
+
+            EventRegistry.instance.SetTimeout(10f, () =>
+            {
+                Destroy(dup);
             });
         }
         
