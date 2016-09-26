@@ -16,6 +16,8 @@ namespace McHorseface.LawnDart
         [SerializeField]
         Quaternion innerRotation;
 
+        float length = 0.1f, aerodynamicFactor = 1000f;
+
 
         int launch_event_listener;
         void Start()
@@ -50,8 +52,22 @@ namespace McHorseface.LawnDart
             dup.transform.position = transform.position;
             dup.transform.rotation = LDController.instance.GetCalibratedRotation();
             var rb = dup.GetComponent<Rigidbody>();
+            var ForwardVelocity = Mathf.Max(0, transform.InverseTransformDirection(rb.velocity).y);
             rb.position = transform.position;
+
+            var deltaDirection = Vector3.Dot(
+            transform.forward,
+            rb.velocity.normalized);
+            deltaDirection *= deltaDirection;
+
+            rb.velocity = Vector3.Lerp(
+            rb.velocity,
+            transform.forward * ForwardVelocity,
+            deltaDirection * Time.fixedDeltaTime * ForwardVelocity);
+
             rb.rotation = LDController.instance.GetCalibratedRotation();
+            rb.rotation = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(rb.velocity, transform.up),
+            Time.fixedDeltaTime * aerodynamicFactor);
 
             Vector3 gravity =  transform.InverseTransformVector(Vector3.down);
 
