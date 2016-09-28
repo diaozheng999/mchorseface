@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\DartController.cs" />
     <Compile Include="Assets\Scripts\DemoController.cs" />
     <Compile Include="Assets\Scripts\DemoCube.cs" />
+    <Compile Include="Assets\Scripts\DistanceIndicator.cs" />
     <Compile Include="Assets\Scripts\DontDestroy.cs" />
     <Compile Include="Assets\Scripts\Extensions.cs" />
     <Compile Include="Assets\Scripts\LDCalibrator.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Assets\Scripts\LawnDart.cs" />
     <Compile Include="Assets\Scripts\LawnDartLauncher.cs" />
     <Compile Include="Assets\Scripts\LoadGame.cs" />
+    <Compile Include="Assets\Scripts\MiiController.cs" />
     <Compile Include="Assets\Scripts\TutorialControl.cs" />
     <Compile Include="Assets\Scripts\WiimoteCalibrator.cs" />
     <Compile Include="Assets\Scripts\WiimoteController.cs" />
