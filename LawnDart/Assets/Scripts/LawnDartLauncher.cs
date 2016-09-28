@@ -15,6 +15,8 @@ namespace McHorseface.LawnDart
         float scaleFactor;
         [SerializeField]
         Quaternion innerRotation;
+        [SerializeField]
+        bool isTryout;
 
         float length = 0.1f, aerodynamicFactor = 1000f;
 
@@ -26,11 +28,18 @@ namespace McHorseface.LawnDart
             sprite.SetActive(false);
 
             innerRotation = Quaternion.Euler(new Vector3(0, -90f, 0));
-            EventRegistry.instance.AddEventListener(LDCalibrator.CALIB_TRYOUT, Tryout);
+            if (isTryout)
+            {
+                EventRegistry.instance.AddEventListener(LDCalibrator.CALIB_TRYOUT, StartListener);
+            }
+            else
+            {
+                StartListener();
+            }
 
         }
 
-        void Tryout()
+        void StartListener()
         {
             enabled = true;
             sprite.SetActive(true);
@@ -43,6 +52,11 @@ namespace McHorseface.LawnDart
             sprite.transform.rotation = LDController.instance.GetCalibratedRotation();
         }
 
+        void OnDestroy()
+        {
+            EventRegistry.instance.RemoveEventListener(LDController.BUTTON_OFF, launch_event_listener);
+        }
+
         void LaunchDart()
         {
             enabled = false;
@@ -51,7 +65,7 @@ namespace McHorseface.LawnDart
             var dup = Instantiate(dart);
             dup.transform.position = transform.position;
             dup.transform.rotation = LDController.instance.GetCalibratedRotation();
-            var rb = dup.GetComponent<Rigidbody>();
+            var rb = dup.GetComponentInChildren<Rigidbody>();
             var ForwardVelocity = Mathf.Max(0, transform.InverseTransformDirection(rb.velocity).y);
             rb.position = transform.position;
 

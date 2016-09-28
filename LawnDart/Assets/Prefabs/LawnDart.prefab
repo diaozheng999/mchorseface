@@ -13,7 +13,7 @@ Prefab:
   m_IsPrefabParent: 1
 --- !u!1 &1000010191527900
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -38,6 +38,23 @@ GameObject:
   - 4: {fileID: 4000010422658022}
   m_Layer: 0
   m_Name: Layer 02
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1000011175722700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000013723113446}
+  - 54: {fileID: 54000014255767042}
+  - 138: {fileID: 138000010406803512}
+  m_Layer: 0
+  m_Name: LawnDart_Scaled
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,7 +109,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1000012651386606
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -107,7 +124,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1000012683607992
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -176,8 +193,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000013152071152}
-  - 54: {fileID: 54000011995408030}
-  - 138: {fileID: 138000012933518628}
   m_Layer: 0
   m_Name: LawnDart
   m_TagString: Untagged
@@ -196,7 +211,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 4000013152071152}
+  m_Father: {fileID: 4000013723113446}
   m_RootOrder: 2
 --- !u!4 &4000010422658022
 Transform:
@@ -267,7 +282,7 @@ Transform:
   - {fileID: 4000011682629928}
   - {fileID: 4000011312915320}
   - {fileID: 4000012871308554}
-  m_Father: {fileID: 4000013152071152}
+  m_Father: {fileID: 4000013723113446}
   m_RootOrder: 1
 --- !u!4 &4000012871308554
 Transform:
@@ -288,15 +303,29 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000014199137540}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.215, z: 3.826}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.0041503906, y: 1.1311951, z: 3.7876282}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 4000013723113446}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!4 &4000013723113446
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011175722700}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000014122057592}
   - {fileID: 4000012403588974}
   - {fileID: 4000010399828806}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 4000013152071152}
   m_RootOrder: 0
 --- !u!4 &4000013953604132
 Transform:
@@ -323,7 +352,7 @@ Transform:
   m_LocalScale: {x: 0.07, y: 0.04, z: 0.07}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 4000013152071152}
+  m_Father: {fileID: 4000013723113446}
   m_RootOrder: 0
 --- !u!4 &4000014200714426
 Transform:
@@ -409,21 +438,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012683607992}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &54000011995408030
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014199137540}
-  serializedVersion: 2
-  m_Mass: 40
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!54 &54000013536819272
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -434,6 +448,21 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 4.79
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!54 &54000014255767042
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011175722700}
+  serializedVersion: 2
+  m_Mass: 40
+  m_Drag: 0
+  m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -464,12 +493,12 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!138 &138000012933518628
+--- !u!138 &138000010406803512
 FixedJoint:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014199137540}
+  m_GameObject: {fileID: 1000011175722700}
   m_ConnectedBody: {fileID: 54000013536819272}
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
