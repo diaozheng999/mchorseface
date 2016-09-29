@@ -11,7 +11,7 @@ public class DartController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        gameObject.transform.LookAt(transform.position + rb.velocity);
+        
         //gameObject.transform.eulerAngles = rb.velocity;
 	}
 
@@ -21,6 +21,6 @@ public class DartController : MonoBehaviour {
     }
     void BecomeKinematic()
     {
-        gameObject.GetComponent<Rigidbody>().isKinematic = true;
+		rb.isKinematic = true;
     }
 }
