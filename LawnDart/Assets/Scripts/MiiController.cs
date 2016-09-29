@@ -29,8 +29,7 @@ namespace McHorseface.LawnDart
             //compute whether the mii is in camera view
 
             Vector3 point = cam.WorldToViewportPoint(transform.position) - p;
-
-            Debug.Log(point);
+            
 
             if(Mathf.Abs(point.x) < xViewRange && Mathf.Abs(point.y) < yViewRange)
             {

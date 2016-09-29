@@ -30,13 +30,27 @@ namespace McHorseface.LawnDart
         const byte BTN_OFF = 0x03;
         const byte ACCEL_UPDATE = 0x04;
         const byte VIBRA = 0x05;
+        const byte BTN_2_ON = 0x07;
+        const byte BTN_2_OFF = 0x08;
+        const byte BTN_3_ON = 0x09;
+        const byte BTN_3_OFF = 0x0A;
+        const byte BTN_4_ON = 0x0B;
+        const byte BTN_4_OFF = 0x0C;
 
         const byte IP_ADDR = 0x06;
 
         public const string BUTTON_OFF = "ld_btn_off";
         public const string BUTTON_ON = "ld_btn_on";
+        public const string BUTTON_2_ON = "ld_btn_2_on";
+        public const string BUTTON_2_OFF = "ld_btn_2_off";
+        public const string BUTTON_3_ON = "ld_btn_3_on";
+        public const string BUTTON_3_OFF = "ld_btn_3_off";
+        public const string BUTTON_4_ON = "ld_btn_4_on";
+        public const string BUTTON_4_OFF = "ld_btn_4_off";
 
         public static LDController instance = null;
+
+        public string nextScene = "GameScene";
 
         [SerializeField]
         InputField IPAddressInput;
@@ -78,14 +92,16 @@ namespace McHorseface.LawnDart
         void Start()
         {
             enabled = false;
-            buffer = new byte[29];
 
             if(instance != null)
             {
                 Debug.Log("Another copy of LDController is present.");
+
                 Destroy(gameObject);
                 return;
             }
+
+            buffer = new byte[29];
 
             DontDestroyOnLoad(gameObject);
             instance = this;
@@ -93,8 +109,13 @@ namespace McHorseface.LawnDart
             EventRegistry.instance.AddEventListener(LDCalibrator.CALIB_TRYOUT, () =>
             {
                 Sprite.SetActive(false);
-            });
+            }, true);
             
+        }
+
+        public void ShowSprite()
+        {
+            Sprite.SetActive(true);
         }
 
 
@@ -136,6 +157,11 @@ namespace McHorseface.LawnDart
 
         public void Calibrate()
         {
+            //aesthetics
+            var mat = Sprite.GetComponent<MeshRenderer>().material;
+            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1);
+
+
             transform.rotation = Quaternion.identity;
 
             transform.rotation = Quaternion.FromToRotation(Post.transform.forward, Vector3.forward);
@@ -206,6 +232,7 @@ namespace McHorseface.LawnDart
 
                     case BTN_OFF:
                         // Event library is currently NOT thread-safe
+                        Debug.Log("1 finger off");
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
                             EventRegistry.instance.Invoke(BUTTON_OFF);
@@ -213,9 +240,61 @@ namespace McHorseface.LawnDart
                         break;
 
                     case BTN_ON:
+                        Debug.Log("1 finger on");
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
                             EventRegistry.instance.Invoke(BUTTON_ON);
+                        });
+                        break;
+
+                    case BTN_2_OFF:
+                        Debug.Log("2 fingers off");
+                        // Event library is currently NOT thread-safe
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_2_OFF);
+                        });
+                        break;
+
+                    case BTN_2_ON:
+                        Debug.Log("2 fingers on");
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_2_ON);
+                        });
+                        break;
+
+                    case BTN_3_OFF:
+                        Debug.Log("3 fingers off");
+                        // Event library is currently NOT thread-safe
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_3_OFF);
+                        });
+                        break;
+
+                    case BTN_3_ON:
+                        Debug.Log("3 fingers on");
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_3_ON);
+                        });
+                        break;
+
+                    case BTN_4_OFF:
+                        Debug.Log("4 fingers off");
+                        // Event library is currently NOT thread-safe
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_4_OFF);
+                        });
+                        break;
+
+                    case BTN_4_ON:
+                        Debug.Log("4 fingers on");
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_4_ON);
                         });
                         break;
 
@@ -239,8 +318,8 @@ namespace McHorseface.LawnDart
         void OnDestroy()
         {
             terminated = true;
-            udpClient.Close();
-            tcpClient.Close();
+            if(udpClient!=null) udpClient.Close();
+            if(tcpClient!=null) tcpClient.Close();
         }
 
 	    // Update is called once per frame

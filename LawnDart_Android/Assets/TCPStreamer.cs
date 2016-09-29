@@ -34,6 +34,12 @@ namespace McHorseface.LawnDartController
 
         const byte IP_ADDR = 0x06;
 
+        const byte BTN_2_ON = 0x07;
+        const byte BTN_2_OFF = 0x08;
+        const byte BTN_3_ON = 0x09;
+        const byte BTN_3_OFF = 0x0A;
+        const byte BTN_4_ON = 0x0B;
+        const byte BTN_4_OFF = 0x0C;
         // listeners
         private TcpListener[] listeners;
 
@@ -72,6 +78,9 @@ namespace McHorseface.LawnDartController
 
 
         bool pressed = false;
+        bool pressed2 = false;
+        bool pressed3 = false;
+        bool pressed4 = false;
 
         // Use this for initialization
         void Start()
@@ -192,22 +201,71 @@ namespace McHorseface.LawnDartController
             }
         }
 
+        void WriteBtnOffBytes()
+        {
+            bool writes = false;
+            if (Input.touchCount < 4 && pressed4)
+            {
+                pressed4 = false;
+                stream.WriteByte(BTN_4_OFF);
+                writes = true;
+            }
+            if (Input.touchCount < 3 && pressed3)
+            {
+                pressed3 = false;
+                stream.WriteByte(BTN_3_OFF);
+                writes = true;
+            }
+            if(Input.touchCount < 2 && pressed2)
+            {
+                pressed2 = false;
+                stream.WriteByte(BTN_2_OFF);
+                writes = true;
+            }
+            if(Input.touchCount < 1 && pressed)
+            {
+                pressed = false;
+                stream.WriteByte(BTN_OFF);
+                writes = true;
+            }
+            if (writes)
+            {
+                Handheld.Vibrate();
+            }
+        }
+
         void FixedUpdate()
         {
-
+            button_indicator.GetComponent<Text>().text = "Pressed " + Input.touchCount;
             // handle buttons
             if(Input.touchCount > 0 && !pressed)
             {
                 pressed = true;
                 stream.WriteByte(BTN_ON);
-                button_indicator.SetActive(true);
-                //Handheld.Vibrate();
-            }else if(Input.touchCount == 0 && pressed)
+                button_indicator.SetActive(true);    
+            }
+            if (Input.touchCount > 1 && !pressed2)
             {
-                pressed = false;
+                pressed2 = true;
+                stream.WriteByte(BTN_2_ON);
+            }
+            if (Input.touchCount > 2 && !pressed3)
+            {
+                pressed3 = true;
+                stream.WriteByte(BTN_3_ON);
+            }
+            if (Input.touchCount > 3 && !pressed4)
+            {
+                pressed4 = true;
+                stream.WriteByte(BTN_4_ON);
+            }
+
+            WriteBtnOffBytes();
+
+            if (Input.touchCount == 0 && pressed)
+            {
                 button_indicator.SetActive(false);
-                stream.WriteByte(BTN_OFF);
-                Handheld.Vibrate();
+                WriteBtnOffBytes();
             }
 
             var pos = transform.position;

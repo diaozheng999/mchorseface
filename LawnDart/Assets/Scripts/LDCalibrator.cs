@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityCoroutine = System.Collections.IEnumerator;
 using PGT.Core;
@@ -19,6 +20,10 @@ namespace McHorseface.LawnDart
         GameObject confirmationNo;
         [SerializeField]
         GameObject trySlide;
+        [SerializeField]
+        GameObject hand;
+        [SerializeField]
+        GameObject finalSlide;
 
         AnimationController cfmYesAnim;
         AnimationController cfmNoAnim;
@@ -40,6 +45,8 @@ namespace McHorseface.LawnDart
             cfmYesOrigin = confirmationYes.transform.position;
             cfmNoOrigin = confirmationNo.transform.position;
             StartCoroutine(CalibrationStart());
+            if (LDController.instance) 
+                LDController.instance.ShowSprite();
 	    }
 
 
@@ -51,7 +58,8 @@ namespace McHorseface.LawnDart
             confirmationYes.SetActive(false);
             confirmationNo.SetActive(false);
             trySlide.SetActive(false);
-
+            finalSlide.SetActive(false);
+            hand.SetActive(true);
             enabled = false;
             EventRegistry.instance.AddEventListener(LDController.BUTTON_OFF, () =>
             {
@@ -64,6 +72,7 @@ namespace McHorseface.LawnDart
             while(buttonState == ButtonState.None)
             {
                 calibrationSlide.SetActive(false);
+                hand.SetActive(false);
                 confirmationSlide.SetActive(true);
                 confirmationYes.gameObject.SetActive(true);
                 confirmationNo.gameObject.SetActive(true);
@@ -85,6 +94,15 @@ namespace McHorseface.LawnDart
                 confirmationYes.SetActive(false);
                 confirmationNo.SetActive(false);
                 EventRegistry.instance.Invoke(CALIB_TRYOUT);
+
+                // whenever a button_4_off is sent, a button_off is also sent
+                yield return new WaitForEvent(LDController.BUTTON_4_OFF);
+                yield return new WaitForEvent(LDController.BUTTON_OFF);
+
+                trySlide.SetActive(false);
+                finalSlide.SetActive(true);
+                yield return new WaitForEvent(LDController.BUTTON_OFF);
+                SceneManager.LoadScene(LDController.instance.nextScene);
             }
             else
             {
