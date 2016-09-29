@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System;
+using System.Text;
 
 /**
  * Adjusted from PGT's NetCode.cs - Sudoku Shuffle
@@ -31,8 +32,15 @@ namespace McHorseface.LawnDartController
         const byte BTN_OFF = 0x03;
         const byte VIBRA = 0x05;
 
+        const byte IP_ADDR = 0x06;
+
         // listeners
         private TcpListener[] listeners;
+
+        private Socket udpclient = null;
+
+        IPEndPoint udpep = null;
+
         private List<IPAddress> ip;
         NetworkStream stream;
         byte[] buffer;
@@ -59,6 +67,9 @@ namespace McHorseface.LawnDartController
         Text accel_z_val;
         [SerializeField]
         GameObject button_indicator;
+        [SerializeField]
+        Text udpindicator;
+
 
         bool pressed = false;
 
@@ -69,7 +80,7 @@ namespace McHorseface.LawnDartController
             ip = new List<IPAddress>();
             var host = Dns.GetHostEntry(Dns.GetHostName());
             button_indicator.SetActive(false);
-            buffer = new byte[sizeof(float) * 7 + 2];
+            buffer = new byte[sizeof(float) * 7 + 1];
 
             foreach(var entry in host.AddressList)
             {
@@ -156,9 +167,27 @@ namespace McHorseface.LawnDartController
                     stream.EndRead(r);
                 }, null);
                 yield return yield_instruction;
-                if(buf[0] == VIBRA)
+
+                switch (buf[0])
                 {
-                    Handheld.Vibrate();
+                    case VIBRA:
+                        Handheld.Vibrate();
+                        break;
+                    case IP_ADDR:
+                        int k = stream.ReadByte();
+
+                        byte[] ipaddr = new byte[k];
+                        stream.Read(ipaddr, 0, k);
+
+                        string ipaddrstr = Encoding.ASCII.GetString(ipaddr).Split(':')[0];
+                        IPAddress addr = IPAddress.Parse(ipaddrstr);
+
+                        udpindicator.text = "UDP=" + ipaddrstr;
+
+                        udpep = new IPEndPoint(addr, 53471);
+                        udpclient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+                        break;
                 }
             }
         }
@@ -194,10 +223,14 @@ namespace McHorseface.LawnDartController
             Array.Copy(BitConverter.GetBytes(rot.z), 0, buffer, 21, 4);
             Array.Copy(BitConverter.GetBytes(rot.w), 0, buffer, 25, 4);
 
-            stream.Write(buffer, 0, 29);
+
+            if (udpep != null)
+            {
+                udpclient.SendTo(buffer, udpep);
+            } else { 
+                stream.Write(buffer, 0, 29);
+            }
             
-
-
             stream.Flush();
         }
     }

@@ -13,6 +13,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Text;
 
 namespace McHorseface.LawnDart
 {
@@ -30,6 +31,8 @@ namespace McHorseface.LawnDart
         const byte ACCEL_UPDATE = 0x04;
         const byte VIBRA = 0x05;
 
+        const byte IP_ADDR = 0x06;
+
         public const string BUTTON_OFF = "ld_btn_off";
         public const string BUTTON_ON = "ld_btn_on";
 
@@ -38,6 +41,9 @@ namespace McHorseface.LawnDart
         [SerializeField]
         InputField IPAddressInput;
         NetworkStream stream;
+
+        UdpClient udpClient;
+        TcpClient tcpClient;
 
         [SerializeField]
         GameObject Post;
@@ -55,6 +61,7 @@ namespace McHorseface.LawnDart
         Vector3 accel;
 
         Quaternion calibratedRotation;
+        string ipaddr;
 
         // we're not locking cos rot and accel are not updated at all
         public Quaternion Rot { get {
@@ -90,6 +97,7 @@ namespace McHorseface.LawnDart
             
         }
 
+
         public void Connect()
         {
             var client = new TcpClient();
@@ -97,16 +105,35 @@ namespace McHorseface.LawnDart
             try
             {
                 client.Connect(IPAddressInput.GetComponentInChildren<Text>().text, 53451);
+                
                 stream = client.GetStream();
+                tcpClient = client;
+                StartCoroutine(SendIpAddrAsync(client));
+
+                udpClient = new UdpClient(53471);
+
                 enabled = true;
+                (new Thread(UDPNetworkListener)).Start();
                 (new Thread(NetworkListener)).Start();
             }
-            catch
+            catch (Exception e)
             {
-                Debug.Log("Connection Error.");
+                Debug.Log("Connection Error: "+e.ToString());
             }
         }
        
+        UnityCoroutine SendIpAddrAsync(TcpClient client)
+        {
+            yield return new WaitForEndOfFrame();
+            
+            byte[] charbuf = Encoding.ASCII.GetBytes(client.Client.LocalEndPoint.ToString().ToCharArray());
+
+            stream.WriteByte(IP_ADDR);
+            stream.WriteByte((byte)charbuf.Length);
+            stream.Write(charbuf, 0, charbuf.Length);
+            stream.Flush();
+        }
+
         public void Calibrate()
         {
             transform.rotation = Quaternion.identity;
@@ -134,6 +161,26 @@ namespace McHorseface.LawnDart
             }
 
             Debug.Log("Printing buffer "+buf);
+        }
+
+        void UDPNetworkListener()
+        {
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 53471);
+            while (!terminated)
+            {
+                byte[] buffer = udpClient.Receive(ref ipep);
+
+                if(buffer[0] == POS_UPDATE)
+                {
+                    accel.x = BitConverter.ToSingle(buffer, 1);
+                    accel.y = BitConverter.ToSingle(buffer, 5);
+                    accel.z = BitConverter.ToSingle(buffer, 9);
+                    rot.x = BitConverter.ToSingle(buffer, 13);
+                    rot.y = BitConverter.ToSingle(buffer, 17);
+                    rot.z = BitConverter.ToSingle(buffer, 21);
+                    rot.w = BitConverter.ToSingle(buffer, 25);
+                }
+            }
         }
 
         void NetworkListener()
@@ -192,6 +239,8 @@ namespace McHorseface.LawnDart
         void OnDestroy()
         {
             terminated = true;
+            udpClient.Close();
+            tcpClient.Close();
         }
 
 	    // Update is called once per frame
