@@ -30,6 +30,8 @@ namespace McHorseface.LawnDart
 
             Vector3 point = cam.WorldToViewportPoint(transform.position) - p;
 
+            Debug.Log(point);
+
             if(Mathf.Abs(point.x) < xViewRange && Mathf.Abs(point.y) < yViewRange)
             {
                 if (!distanceIndicator.activeSelf)
