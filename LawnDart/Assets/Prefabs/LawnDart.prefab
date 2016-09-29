@@ -229,6 +229,8 @@ GameObject:
   - 4: {fileID: 4000013152071152}
   - 54: {fileID: 54000013270227256}
   - 138: {fileID: 138000013523722268}
+  - 114: {fileID: 114000010820643536}
+  - 135: {fileID: 135000012173992906}
   m_Layer: 0
   m_Name: LawnDart
   m_TagString: Untagged
@@ -242,8 +244,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010191527900}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.808}
+  m_LocalRotation: {x: -0.00074485125, y: -0.000057722766, z: -0.00006349367, w: 0.99999976}
+  m_LocalPosition: {x: 0.000116711155, y: -0.0022176597, z: 0.80805385}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -326,9 +328,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010430496934}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalRotation: {x: -0.7111589, y: -0.27654603, z: 0.56580603, w: -0.3124723}
   m_LocalPosition: {x: 0.429, y: 0.266, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.73560214, y: 0.73560214, z: 0.73560214}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_Children:
   - {fileID: 224000011018838692}
@@ -353,8 +355,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000014199137540}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.4803, z: 0}
+  m_LocalRotation: {x: -0.33769584, y: 0.0015104085, z: -0.9405907, w: -0.035333503}
+  m_LocalPosition: {x: -0.51853204, y: 0.023583777, z: 0.18531027}
   m_LocalScale: {x: 0.34, y: 0.34, z: 0.34}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -498,7 +500,7 @@ Rigidbody:
   m_GameObject: {fileID: 1000010191527900}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 50
   m_AngularDrag: 4.79
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -537,7 +539,18 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 10m
+  m_Text: 1.47m
+--- !u!114 &114000010820643536
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014199137540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec63f9d6451646b408d9e150d5c57df8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114000011656885414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -600,6 +613,18 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.05
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &135000012173992906
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014199137540}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &136000011124884230
 CapsuleCollider:

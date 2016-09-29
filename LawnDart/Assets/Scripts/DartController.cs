@@ -17,6 +17,10 @@ public class DartController : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
+        gameObject.BroadcastMessage("BecomeKinematic");
+    }
+    void BecomeKinematic()
+    {
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
     }
 }
