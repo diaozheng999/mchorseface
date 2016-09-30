@@ -657,6 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
+  blood: {fileID: 1000011892261382, guid: 6afa2f5da1fe0e648a37e037039451ec, type: 2}
 --- !u!114 &114000011656885414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -690,6 +691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 54000013270227256}
+  blood: {fileID: 1000011892261382, guid: 6afa2f5da1fe0e648a37e037039451ec, type: 2}
 --- !u!114 &114000012385957356
 MonoBehaviour:
   m_ObjectHideFlags: 1

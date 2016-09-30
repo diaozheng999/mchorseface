@@ -4,10 +4,12 @@ using System.Collections;
 
 namespace McHorseface.LawnDart
 {
-    
+
     public class MiiController : MonoBehaviour {
 
         [SerializeField]
+        private GameObject blood;
+            [SerializeField]
         GameObject distanceIndicator;
         Camera cam;
 
@@ -43,5 +45,9 @@ namespace McHorseface.LawnDart
             }
 
 	    }
+        void OnTriggerEnter(Collider other)
+        {
+            other.SendMessage("MakeBlood", blood);
+        }
     }
 }

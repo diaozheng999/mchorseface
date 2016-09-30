@@ -4,10 +4,14 @@ using System.Collections;
 
 namespace McHorseface.LawnDart
 {
+    
     [RequireComponent(typeof(AudioSource))]
     public class DartController : MonoBehaviour {
         [SerializeField]
         Rigidbody rb;
+
+        [SerializeField]
+        private GameObject blood;
 
         AudioSource hit;
 
@@ -22,6 +26,15 @@ namespace McHorseface.LawnDart
             if (hit != null) hit.Play();
         }
 
+        void MakeBlood()
+        {
+            GameObject newBlood = Instantiate(blood);
+            newBlood.transform.parent = gameObject.transform;
+            newBlood.transform.localPosition = new Vector3(0, 0, 0);
+        }
+
     }
+
+
 
 }
