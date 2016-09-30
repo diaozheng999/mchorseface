@@ -9,6 +9,8 @@ namespace McHorseface.LawnDart
         [SerializeField]
         Rigidbody rb;
 
+        public bool isTryout = true;
+
         AudioSource hit;
 
         void Start()

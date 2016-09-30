@@ -25,6 +25,9 @@ namespace McHorseface.LawnDart
         [SerializeField]
         GameObject finalSlide;
 
+        [SerializeField]
+        AudioSource continueSound;
+
         AnimationController cfmYesAnim;
         AnimationController cfmNoAnim;
 
@@ -67,6 +70,7 @@ namespace McHorseface.LawnDart
             });
 
             yield return new WaitForEvent(LDController.BUTTON_OFF);
+            continueSound.Play();
             buttonState = ButtonState.None;
 
             while(buttonState == ButtonState.None)
@@ -86,6 +90,7 @@ namespace McHorseface.LawnDart
                 confirmationYes.transform.position = cfmYesOrigin;
 
                 yield return new WaitForEvent(LDController.BUTTON_OFF);
+                continueSound.Play();
             }
             if(buttonState == ButtonState.Yes)
             {
@@ -98,10 +103,12 @@ namespace McHorseface.LawnDart
                 // whenever a button_4_off is sent, a button_off is also sent
                 yield return new WaitForEvent(LDController.BUTTON_4_OFF);
                 yield return new WaitForEvent(LDController.BUTTON_OFF);
+                continueSound.Play();
 
                 trySlide.SetActive(false);
                 finalSlide.SetActive(true);
                 yield return new WaitForEvent(LDController.BUTTON_OFF);
+                continueSound.Play();
                 SceneManager.LoadScene(LDController.instance.nextScene);
             }
             else
