@@ -158,7 +158,7 @@ namespace McHorseface.LawnDart
         public void Calibrate()
         {
             //aesthetics
-            var mat = Sprite.GetComponent<MeshRenderer>().material;
+            var mat = Sprite.GetComponentInChildren<MeshRenderer>().material;
             mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1);
 
 
@@ -214,7 +214,7 @@ namespace McHorseface.LawnDart
             byte[] buffer = new byte[sizeof(float) * 7 + 1];
             while (!terminated)
             {
-                stream.Read(buffer, 0, 1);
+                if (stream.Read(buffer, 0, 1) < 1) continue;
                 switch (buffer[0])
                 {
                     case POS_UPDATE:
