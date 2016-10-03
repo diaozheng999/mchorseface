@@ -61,6 +61,12 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\PGT\Scripts\Core\Animation.cs" />
@@ -91,6 +97,15 @@
     <Compile Include="Assets\Scripts\TutorialControl.cs" />
     <Compile Include="Assets\Scripts\WiimoteCalibrator.cs" />
     <Compile Include="Assets\Scripts\WiimoteController.cs" />
+    <Compile Include="Assets\TinyTerrain\Scripts\Rotate.cs" />
+    <Compile Include="Assets\TinyTerrain\Standard Assets\Water\Scripts\Displace.cs" />
+    <Compile Include="Assets\TinyTerrain\Standard Assets\Water\Scripts\GerstnerDisplace.cs" />
+    <Compile Include="Assets\TinyTerrain\Standard Assets\Water\Scripts\MeshContainer.cs" />
+    <Compile Include="Assets\TinyTerrain\Standard Assets\Water\Scripts\PlanarReflection.cs" />
+    <Compile Include="Assets\TinyTerrain\Standard Assets\Water\Scripts\SpecularLighting.cs" />
+    <Compile Include="Assets\TinyTerrain\Standard Assets\Water\Scripts\Water.cs" />
+    <Compile Include="Assets\TinyTerrain\Standard Assets\Water\Scripts\WaterBase.cs" />
+    <Compile Include="Assets\TinyTerrain\Standard Assets\Water\Scripts\WaterTile.cs" />
     <Compile Include="Assets\Wiimote\Scripts\Enums.cs" />
     <Compile Include="Assets\Wiimote\Scripts\HIDapi.cs" />
     <Compile Include="Assets\Wiimote\Scripts\Internal\ReadOnlyArray.cs" />
@@ -106,6 +121,12 @@
     <Compile Include="Assets\Wiimote\Scripts\WiimoteData\WiiUProData.cs" />
     <Compile Include="Assets\Wiimote\Scripts\WiimoteData\WiimoteData.cs" />
     <Compile Include="Assets\Wiimote\Scripts\WiimoteManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\TinyTerrain\Materials\TerrainSurface.shader" />
+    <None Include="Assets\TinyTerrain\README.txt" />
+    <None Include="Assets\TinyTerrain\Standard Assets\Skyboxes\_skybox info.txt" />
+    <None Include="Assets\TinyTerrain\Standard Assets\Water\Shaders\FXWaterPro.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
