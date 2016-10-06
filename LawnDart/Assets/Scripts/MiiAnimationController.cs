@@ -34,12 +34,16 @@ namespace McHorseface.LawnDart
 
         bool doWave = true;
 
+        public bool alive = true;
+
         GameObject activeBody;
 
         [SerializeField]
         Rigidbody collapsed;
         [SerializeField]
         Collider collapsedCollider;
+
+        public static string MII_HIT = "mii_ouch";
 
 	    // Use this for initialization
 	    void Start () {
@@ -121,7 +125,9 @@ namespace McHorseface.LawnDart
 
         public void Fragment(Vector3 position)
         {
-           
+            if (!alive) return;
+            alive = false;
+            EventRegistry.instance.Invoke(MII_HIT);
             anim.Stop();
             collapsed.isKinematic = true;
             collapsedCollider.enabled = false;

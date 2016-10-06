@@ -10,6 +10,9 @@ namespace McHorseface.LawnDart
         [SerializeField]
         Rigidbody rb;
 
+        const string WARP_TARGET = "WarpTarget";
+        const string MII = "Mii";
+
         public bool isTryout = true;
 
         AudioSource hit;
@@ -19,14 +22,19 @@ namespace McHorseface.LawnDart
             hit = GetComponent<AudioSource>();
         }
 
-        void OnTriggerEnter()
+        void OnTriggerEnter(Collider other)
         {
-            if (rb != null) rb.isKinematic = true;
+
             if (hit != null) hit.Play();
-            EventRegistry.instance.SetTimeout(1f, () =>
+
+            if (other.CompareTag(MII))
             {
-                StartCoroutine(Player.instance.teleport(transform.position));
-            });
+                other.GetComponentInChildren<MiiAnimationController>().Fragment(transform.position);
+            }else
+            {
+                if (rb != null) rb.isKinematic = true;
+            }
+            
         }
 
     }

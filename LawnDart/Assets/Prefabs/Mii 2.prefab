@@ -110,7 +110,7 @@ GameObject:
   - 136: {fileID: 136000012431253230}
   m_Layer: 0
   m_Name: Mii 2
-  m_TagString: Untagged
+  m_TagString: Mii
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
