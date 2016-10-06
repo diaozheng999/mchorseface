@@ -133,6 +133,10 @@ Prefab:
       propertyPath: m_Name
       value: Mii
       objectReference: {fileID: 0}
+    - target: {fileID: 1000010440606488, guid: cd3dc8b22c35fc5429d040f555f9b23d, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cd3dc8b22c35fc5429d040f555f9b23d, type: 2}
   m_IsPrefabParent: 0
