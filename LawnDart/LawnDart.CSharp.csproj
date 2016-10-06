@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\LawnDart.cs" />
     <Compile Include="Assets\Scripts\LawnDartLauncher.cs" />
     <Compile Include="Assets\Scripts\LoadGame.cs" />
+    <Compile Include="Assets\Scripts\MCBlob.cs" />
     <Compile Include="Assets\Scripts\MiiAnimationController.cs" />
     <Compile Include="Assets\Scripts\MiiController.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
