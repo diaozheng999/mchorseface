@@ -138,7 +138,7 @@ namespace McHorseface.LawnDart
                 }
                 continueSound.Play();
                 var n_mii = Instantiate(mii);
-                n_mii.transform.position = new Vector3(0, 1, 3);
+                n_mii.transform.position = new Vector3(0, 1, 4);
 
 
 
