@@ -67,7 +67,7 @@ namespace McHorseface.LawnDart
 
         void Update()
         {
-            sprite.transform.rotation = LDController.instance.GetCalibratedRotation();
+            transform.rotation = LDController.instance.GetCalibratedRotation();
         }
 
         void OnDestroy()
@@ -84,7 +84,7 @@ namespace McHorseface.LawnDart
             sprite.SetActive(false);
 
             var dup = Instantiate(dart);
-            dup.transform.position = transform.position;
+            dup.transform.position = sprite.transform.position;
             dup.transform.rotation = LDController.instance.GetCalibratedRotation();
             var rb = dup.GetComponent<Rigidbody>();
             rb.position = transform.position;
