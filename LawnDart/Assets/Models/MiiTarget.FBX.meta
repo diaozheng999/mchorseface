@@ -1,0 +1,173 @@
+fileFormatVersion: 2
+guid: cc90d0d3237a5e24ab25f347d0c2011d
+timeCreated: 1475705285
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Cube
+    100002: GeoSphere001
+    100004: GeoSphere002
+    100006: GeoSphere003
+    100008: GeoSphere004
+    100010: GeoSphere005
+    100012: GeoSphere006
+    100014: GeoSphere007
+    100016: GeoSphere008
+    100018: Hair
+    100020: Handle1
+    100022: Line001
+    100024: Line002
+    100026: Mii_F_2
+    100028: Mii_M_2
+    100030: //RootNode
+    100032: polySurface009
+    100034: polySurface010
+    100036: polySurface011
+    100038: polySurface012
+    100040: polySurface8
+    400000: Cube
+    400002: GeoSphere001
+    400004: GeoSphere002
+    400006: GeoSphere003
+    400008: GeoSphere004
+    400010: GeoSphere005
+    400012: GeoSphere006
+    400014: GeoSphere007
+    400016: GeoSphere008
+    400018: Hair
+    400020: Handle1
+    400022: Line001
+    400024: Line002
+    400026: Mii_F_2
+    400028: Mii_M_2
+    400030: //RootNode
+    400032: polySurface009
+    400034: polySurface010
+    400036: polySurface011
+    400038: polySurface012
+    400040: polySurface8
+    2300000: Cube
+    2300002: GeoSphere001
+    2300004: GeoSphere002
+    2300006: GeoSphere003
+    2300008: GeoSphere004
+    2300010: GeoSphere005
+    2300012: GeoSphere006
+    2300014: GeoSphere007
+    2300016: GeoSphere008
+    2300018: Hair
+    2300020: Handle1
+    2300022: Line001
+    2300024: Line002
+    2300026: Mii_F_2
+    2300028: Mii_M_2
+    2300030: polySurface009
+    2300032: polySurface010
+    2300034: polySurface011
+    2300036: polySurface012
+    2300038: polySurface8
+    3300000: Cube
+    3300002: GeoSphere001
+    3300004: GeoSphere002
+    3300006: GeoSphere003
+    3300008: GeoSphere004
+    3300010: GeoSphere005
+    3300012: GeoSphere006
+    3300014: GeoSphere007
+    3300016: GeoSphere008
+    3300018: Hair
+    3300020: Handle1
+    3300022: Line001
+    3300024: Line002
+    3300026: Mii_F_2
+    3300028: Mii_M_2
+    3300030: polySurface009
+    3300032: polySurface010
+    3300034: polySurface011
+    3300036: polySurface012
+    3300038: polySurface8
+    4300000: Mii_F_2
+    4300002: GeoSphere005
+    4300004: polySurface011
+    4300006: Cube
+    4300008: GeoSphere006
+    4300010: Mii_M_2
+    4300012: GeoSphere007
+    4300014: polySurface012
+    4300016: Handle1
+    4300018: GeoSphere008
+    4300020: Line001
+    4300022: polySurface8
+    4300024: Hair
+    4300026: GeoSphere001
+    4300028: GeoSphere002
+    4300030: Line002
+    4300032: GeoSphere003
+    4300034: GeoSphere004
+    4300036: polySurface009
+    4300038: polySurface010
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

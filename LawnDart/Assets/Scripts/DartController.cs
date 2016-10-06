@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using PGT.Core;
 
 
 namespace McHorseface.LawnDart
@@ -22,6 +23,10 @@ namespace McHorseface.LawnDart
         {
             if (rb != null) rb.isKinematic = true;
             if (hit != null) hit.Play();
+            EventRegistry.instance.SetTimeout(1f, () =>
+            {
+                StartCoroutine(Player.instance.teleport(transform.position));
+            });
         }
 
     }
