@@ -206,6 +206,22 @@ namespace McHorseface.LawnDart
                     rot.z = BitConverter.ToSingle(buffer, 21);
                     rot.w = BitConverter.ToSingle(buffer, 25);
                 }
+                else if(buffer[0] == BTN_OFF)
+                {
+                    accel.x = BitConverter.ToSingle(buffer, 1);
+                    accel.y = BitConverter.ToSingle(buffer, 5);
+                    accel.z = BitConverter.ToSingle(buffer, 9);
+                    rot.x = BitConverter.ToSingle(buffer, 13);
+                    rot.y = BitConverter.ToSingle(buffer, 17);
+                    rot.z = BitConverter.ToSingle(buffer, 21);
+                    rot.w = BitConverter.ToSingle(buffer, 25);
+                    Debug.Log("1 finger off");
+                    UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                    {
+                        EventRegistry.instance.Invoke(BUTTON_OFF);
+                    });
+                    break;
+                }
             }
         }
 
