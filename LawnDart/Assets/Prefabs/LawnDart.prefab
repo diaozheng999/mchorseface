@@ -21,7 +21,7 @@ GameObject:
   - 4: {fileID: 4000010399828806}
   - 54: {fileID: 54000013536819272}
   - 135: {fileID: 135000010445094496}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010422658022}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer 02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,7 +52,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012409101784}
   - 114: {fileID: 114000012385957356}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DistanceIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011312915320}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer 04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,7 @@ GameObject:
   - 4: {fileID: 4000014200714426}
   - 33: {fileID: 33000010890399382}
   - 23: {fileID: 23000010166627376}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Object_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - 224: {fileID: 224000011273509026}
   - 222: {fileID: 222000013609385928}
   - 114: {fileID: 114000010543266384}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011682629928}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer 03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,7 +131,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012403588974}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lawn-Dart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ GameObject:
   - 33: {fileID: 33000011790084680}
   - 136: {fileID: 136000011124884230}
   - 23: {fileID: 23000012658138892}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012871308554}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Layer 05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   - 223: {fileID: 223000012261389020}
   - 114: {fileID: 114000011656885414}
   - 114: {fileID: 114000013902809208}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010812359388}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: guidelines
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ GameObject:
   - 135: {fileID: 135000014269992420}
   - 114: {fileID: 114000011879881030}
   - 82: {fileID: 82000011295581254}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000013953604132}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - 54: {fileID: 54000013270227256}
   - 114: {fileID: 114000010820643536}
   - 138: {fileID: 138000010921978744}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LawnDart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -657,6 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
+  isTryout: 1
 --- !u!114 &114000011656885414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -690,6 +691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 54000013270227256}
+  isTryout: 1
 --- !u!114 &114000012385957356
 MonoBehaviour:
   m_ObjectHideFlags: 1

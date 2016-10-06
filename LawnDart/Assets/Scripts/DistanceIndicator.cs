@@ -33,7 +33,7 @@ namespace McHorseface.LawnDart
             var distStr = "";
             if (!imperial)
             {
-                distStr += dist.ToString("N2") + "m";
+                distStr += dist.ToString("N1") + "m";
             }
             else
             {

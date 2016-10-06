@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using PGT.Core;
 
 
 namespace McHorseface.LawnDart
@@ -8,6 +9,9 @@ namespace McHorseface.LawnDart
     public class DartController : MonoBehaviour {
         [SerializeField]
         Rigidbody rb;
+
+        const string WARP_TARGET = "WarpTarget";
+        const string MII = "Mii";
 
         public bool isTryout = true;
 
@@ -18,10 +22,19 @@ namespace McHorseface.LawnDart
             hit = GetComponent<AudioSource>();
         }
 
-        void OnTriggerEnter()
+        void OnTriggerEnter(Collider other)
         {
-            if (rb != null) rb.isKinematic = true;
+
             if (hit != null) hit.Play();
+
+            if (other.CompareTag(MII))
+            {
+                other.GetComponentInChildren<MiiAnimationController>().Fragment(transform.position);
+            }else
+            {
+                if (rb != null) rb.isKinematic = true;
+            }
+            
         }
 
     }

@@ -24,6 +24,16 @@ namespace McHorseface.LawnDart
         GameObject hand;
         [SerializeField]
         GameObject finalSlide;
+        [SerializeField]
+        GameObject mii;
+        [SerializeField]
+        GameObject warp;
+
+        [SerializeField]
+        GameObject hand0;
+        [SerializeField]
+        GameObject hand1;
+        bool doHandFlip = false;
 
         [SerializeField]
         AudioSource continueSound;
@@ -52,6 +62,21 @@ namespace McHorseface.LawnDart
                 LDController.instance.ShowSprite();
 	    }
 
+        UnityCoroutine FlipHands()
+        {
+            doHandFlip = true;
+            bool slide2 = true;
+            while (doHandFlip)
+            {
+                hand0.SetActive(slide2);
+                hand1.SetActive(!slide2);
+                slide2 = !slide2;
+                yield return new WaitForSeconds(0.7f);
+            }
+
+            hand0.SetActive(false);
+            hand1.SetActive(false);
+        }
 
         UnityCoroutine CalibrationStart()
         {
@@ -63,6 +88,10 @@ namespace McHorseface.LawnDart
             trySlide.SetActive(false);
             finalSlide.SetActive(false);
             hand.SetActive(true);
+            hand0.SetActive(false);
+            hand1.SetActive(false);
+            warp.SetActive(false);
+            doHandFlip = false;
             enabled = false;
             EventRegistry.instance.AddEventListener(LDController.BUTTON_OFF, () =>
             {
@@ -99,17 +128,34 @@ namespace McHorseface.LawnDart
                 confirmationYes.SetActive(false);
                 confirmationNo.SetActive(false);
                 EventRegistry.instance.Invoke(CALIB_TRYOUT);
+                doHandFlip = true;
+                StartCoroutine(FlipHands());
+
+
+                for (int i=0; i < 5; i++)
+                {
+                    yield return new WaitForEvent(LDController.BUTTON_OFF);
+                }
+                continueSound.Play();
+                var n_mii = Instantiate(mii);
+                n_mii.transform.position = new Vector3(0, 1, 3);
+
+
 
                 // whenever a button_4_off is sent, a button_off is also sent
-                yield return new WaitForEvent(LDController.BUTTON_4_OFF);
-                yield return new WaitForEvent(LDController.BUTTON_OFF);
-                continueSound.Play();
+                yield return new WaitForEvent(MiiAnimationController.MII_HIT);
+                yield return new WaitForSeconds(1f);
+
+                doHandFlip = false;
+                hand0.SetActive(false);
+                hand1.SetActive(false);
 
                 trySlide.SetActive(false);
                 finalSlide.SetActive(true);
-                yield return new WaitForEvent(LDController.BUTTON_OFF);
                 continueSound.Play();
-                SceneManager.LoadScene(LDController.instance.nextScene);
+
+                warp.SetActive(true);
+
             }
             else
             {
