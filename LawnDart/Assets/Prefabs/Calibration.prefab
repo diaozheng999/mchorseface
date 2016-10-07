@@ -194,7 +194,7 @@ GameObject:
   - 54: {fileID: 54000012054473590}
   - 136: {fileID: 136000010578584718}
   m_Layer: 0
-  m_Name: Mii 2 1
+  m_Name: Calibration
   m_TagString: Mii
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -858,6 +858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3315513a89e054f42aa7bc6af110081a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CalibrationAnimProb: 0.5
   gender: 1
   maleBodies: []
   femaleBodies:
@@ -869,7 +870,6 @@ MonoBehaviour:
   alive: 1
   collapsed: {fileID: 54000012054473590}
   collapsedCollider: {fileID: 136000010578584718}
-  CalibrationAnimProb: 0.5
 --- !u!135 &135000011228981310
 SphereCollider:
   m_ObjectHideFlags: 1
