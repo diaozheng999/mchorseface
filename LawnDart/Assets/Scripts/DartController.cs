@@ -37,7 +37,7 @@ namespace McHorseface.LawnDart
                 GameObject newBlood = Instantiate(blood);
                 newBlood.transform.parent = gameObject.transform;
                 newBlood.transform.localPosition = new Vector3(0, 0, 0);
-                newBlood.GetComponent<Rigidbody>().velocity += new Vector3(0, 2, 0);
+                newBlood.transform.forward = -1*gameObject.transform.forward;
                 
             }
             else

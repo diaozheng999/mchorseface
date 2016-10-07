@@ -61,8 +61,8 @@ namespace McHorseface.LawnDart
             enabled = true;
             sprite.SetActive(true);
 
-            launch_event_listener = EventRegistry.instance.AddEventListener(LDController.BUTTON_OFF, LaunchDart, true);
-            eventListeners.Add(new Tuple<string, int>(LDController.BUTTON_OFF, launch_event_listener));
+            launch_event_listener = EventRegistry.instance.AddEventListener("FIRE", LaunchDart, true);
+            eventListeners.Add(new Tuple<string, int>("FIRE", launch_event_listener));
         }
 
         void Update()
@@ -78,14 +78,15 @@ namespace McHorseface.LawnDart
             }
         }
 
-        void LaunchDart()
+        void LaunchDart(object packet)
         {
+            var Packet = (Tuple<Vector3, Quaternion>)packet;
             enabled = false;
             sprite.SetActive(false);
 
             var dup = Instantiate(dart);
-            dup.transform.position = transform.position;
-            dup.transform.rotation = LDController.instance.GetCalibratedRotation();
+            dup.transform.position = Packet.car;
+            dup.transform.rotation = LDController.instance.GetCalibratedRotation(Packet.cdr);
             var rb = dup.GetComponent<Rigidbody>();
             rb.position = transform.position;
 

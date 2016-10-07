@@ -207,9 +207,7 @@ namespace McHorseface.LawnDart
                     rot.y = BitConverter.ToSingle(buffer, 17);
                     rot.z = BitConverter.ToSingle(buffer, 21);
                     rot.w = BitConverter.ToSingle(buffer, 25);
-                    Debug.Log("UPDATE");
                 }
-                else { Debug.Log("DON'T UPDATE"); }
                 
             }
         }
@@ -223,12 +221,10 @@ namespace McHorseface.LawnDart
 
                 Vector3 accel2 = new Vector3(0, 0, 0);
                 Quaternion rot2 = new Quaternion(0, 0, 0, 0);
-                Debug.Log(buffer[0]);
                 switch (buffer[0])
                 {
                     case POS_UPDATE:
                         for (var i = 1; i < 29; i += stream.Read(buffer, i, 29 - i));
-                        Debug.Log("goes to 0x01");
                         accel2.x = BitConverter.ToSingle(buffer, 1);
                         accel2.y = BitConverter.ToSingle(buffer, 5);
                         accel2.z = BitConverter.ToSingle(buffer, 9);
@@ -248,12 +244,11 @@ namespace McHorseface.LawnDart
                         rot2.y = BitConverter.ToSingle(buffer, 17);
                         rot2.z = BitConverter.ToSingle(buffer, 21);
                         rot2.w = BitConverter.ToSingle(buffer, 25);
-                        Debug.Log("gets to 0x13");
-                        /*var info = new Tuple<Vector3, Quaternion>(new Vector3(accel2.x, accel2.y, accel2.z), new Quaternion(rot2.x, rot2.y, rot2.z, rot2.w));
+                        var info = new Tuple<Vector3, Quaternion>(new Vector3(accel2.x, accel2.y, accel2.z), new Quaternion(rot2.x, rot2.y, rot2.z, rot2.w));
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_OFF, info);
-                        });*/
+                            EventRegistry.instance.Invoke("FIRE", info);
+                        });
                         break;
 
                     case BTN_OFF:
@@ -334,6 +329,12 @@ namespace McHorseface.LawnDart
         public Quaternion GetCalibratedRotation()
         {
             return Post.transform.rotation;
+        }
+
+        public Quaternion GetCalibratedRotation(Quaternion info)
+        {
+            Internal.transform.localRotation = info;
+            return GetCalibratedRotation();
         }
 
         public Quaternion GetInnerRotation()
