@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityCoroutine = System.Collections.IEnumerator;
 using PGT.Core;
+using PGT.Core.Func;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -206,22 +207,8 @@ namespace McHorseface.LawnDart
                     rot.z = BitConverter.ToSingle(buffer, 21);
                     rot.w = BitConverter.ToSingle(buffer, 25);
                 }
-                else if(buffer[0] == BTN_OFF)
-                {
-                    accel.x = BitConverter.ToSingle(buffer, 1);
-                    accel.y = BitConverter.ToSingle(buffer, 5);
-                    accel.z = BitConverter.ToSingle(buffer, 9);
-                    rot.x = BitConverter.ToSingle(buffer, 13);
-                    rot.y = BitConverter.ToSingle(buffer, 17);
-                    rot.z = BitConverter.ToSingle(buffer, 21);
-                    rot.w = BitConverter.ToSingle(buffer, 25);
-                    Debug.Log("1 finger off");
-                    UnityExecutionThread.instance.ExecuteInMainThread(() =>
-                    {
-                        EventRegistry.instance.Invoke(BUTTON_OFF);
-                    });
                     break;
-                }
+                
             }
         }
 
@@ -243,7 +230,24 @@ namespace McHorseface.LawnDart
                         rot.y = BitConverter.ToSingle(buffer, 17);
                         rot.z = BitConverter.ToSingle(buffer, 21);
                         rot.w = BitConverter.ToSingle(buffer, 25);
- 
+                        break;
+                    case 0x13:
+
+                        for (var i = 1; i < 29; i += stream.Read(buffer, i, 29 - i)) ;
+
+                        accel.x = BitConverter.ToSingle(buffer, 1);
+                        accel.y = BitConverter.ToSingle(buffer, 5);
+                        accel.z = BitConverter.ToSingle(buffer, 9);
+                        rot.x = BitConverter.ToSingle(buffer, 13);
+                        rot.y = BitConverter.ToSingle(buffer, 17);
+                        rot.z = BitConverter.ToSingle(buffer, 21);
+                        rot.w = BitConverter.ToSingle(buffer, 25);
+
+                        var info = new Tuple<Vector3, Quaternion>(new Vector3(accel.x, accel.y, accel.z), new Quaternion(rot.x, rot.y, rot.z, rot.w));
+                        UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                        {
+                            EventRegistry.instance.Invoke(BUTTON_OFF, info);
+                        });
                         break;
 
                     case BTN_OFF:
