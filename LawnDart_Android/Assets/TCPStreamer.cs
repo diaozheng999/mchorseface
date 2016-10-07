@@ -226,7 +226,9 @@ namespace McHorseface.LawnDartController
             {
                 pressed = false;
                 stream.WriteByte(BTN_OFF);
+                Debug.Log("0x13");
                 buffer[0] = 0x13;
+                stream.Write(buffer, 0, 29);
                 writes = true;
             }
             if (writes)
@@ -272,7 +274,7 @@ namespace McHorseface.LawnDartController
             var pos = transform.position;
             var rot = transform.rotation;
             var accel = Input.acceleration;
-
+            Debug.Log("0x01");
             buffer[0] = 0x01;
             Array.Copy(BitConverter.GetBytes(accel.x), 0, buffer, 1, 4);
             Array.Copy(BitConverter.GetBytes(accel.y), 0, buffer, 5, 4);

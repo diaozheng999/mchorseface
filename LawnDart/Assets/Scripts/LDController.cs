@@ -195,9 +195,10 @@ namespace McHorseface.LawnDart
             IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 53471);
             while (!terminated)
             {
-                byte[] buffer = udpClient.Receive(ref ipep);
 
-                if(buffer[0] == POS_UPDATE)
+                byte[] buffer = udpClient.Receive(ref ipep);
+                if (buffer[0] == 0x13) { Debug.Log("Huzzah"); }
+                if (buffer[0] == POS_UPDATE)
                 {
                     accel.x = BitConverter.ToSingle(buffer, 1);
                     accel.y = BitConverter.ToSingle(buffer, 5);
@@ -206,8 +207,9 @@ namespace McHorseface.LawnDart
                     rot.y = BitConverter.ToSingle(buffer, 17);
                     rot.z = BitConverter.ToSingle(buffer, 21);
                     rot.w = BitConverter.ToSingle(buffer, 25);
+                    Debug.Log("UPDATE");
                 }
-                    break;
+                else { Debug.Log("DON'T UPDATE"); }
                 
             }
         }
@@ -218,36 +220,40 @@ namespace McHorseface.LawnDart
             while (!terminated)
             {
                 if (stream.Read(buffer, 0, 1) < 1) continue;
+
+                Vector3 accel2 = new Vector3(0, 0, 0);
+                Quaternion rot2 = new Quaternion(0, 0, 0, 0);
+                Debug.Log(buffer[0]);
                 switch (buffer[0])
                 {
                     case POS_UPDATE:
                         for (var i = 1; i < 29; i += stream.Read(buffer, i, 29 - i));
-
-                        accel.x = BitConverter.ToSingle(buffer, 1);
-                        accel.y = BitConverter.ToSingle(buffer, 5);
-                        accel.z = BitConverter.ToSingle(buffer, 9);
-                        rot.x = BitConverter.ToSingle(buffer, 13);
-                        rot.y = BitConverter.ToSingle(buffer, 17);
-                        rot.z = BitConverter.ToSingle(buffer, 21);
-                        rot.w = BitConverter.ToSingle(buffer, 25);
+                        Debug.Log("goes to 0x01");
+                        accel2.x = BitConverter.ToSingle(buffer, 1);
+                        accel2.y = BitConverter.ToSingle(buffer, 5);
+                        accel2.z = BitConverter.ToSingle(buffer, 9);
+                        rot2.x = BitConverter.ToSingle(buffer, 13);
+                        rot2.y = BitConverter.ToSingle(buffer, 17);
+                        rot2.z = BitConverter.ToSingle(buffer, 21);
+                        rot2.w = BitConverter.ToSingle(buffer, 25);
                         break;
                     case 0x13:
 
                         for (var i = 1; i < 29; i += stream.Read(buffer, i, 29 - i)) ;
+                        accel2.x = BitConverter.ToSingle(buffer, 1);
+                        accel2.y = BitConverter.ToSingle(buffer, 5);
+                        accel2.z = BitConverter.ToSingle(buffer, 9);
 
-                        accel.x = BitConverter.ToSingle(buffer, 1);
-                        accel.y = BitConverter.ToSingle(buffer, 5);
-                        accel.z = BitConverter.ToSingle(buffer, 9);
-                        rot.x = BitConverter.ToSingle(buffer, 13);
-                        rot.y = BitConverter.ToSingle(buffer, 17);
-                        rot.z = BitConverter.ToSingle(buffer, 21);
-                        rot.w = BitConverter.ToSingle(buffer, 25);
-
-                        var info = new Tuple<Vector3, Quaternion>(new Vector3(accel.x, accel.y, accel.z), new Quaternion(rot.x, rot.y, rot.z, rot.w));
+                        rot2.x = BitConverter.ToSingle(buffer, 13);
+                        rot2.y = BitConverter.ToSingle(buffer, 17);
+                        rot2.z = BitConverter.ToSingle(buffer, 21);
+                        rot2.w = BitConverter.ToSingle(buffer, 25);
+                        Debug.Log("gets to 0x13");
+                        /*var info = new Tuple<Vector3, Quaternion>(new Vector3(accel2.x, accel2.y, accel2.z), new Quaternion(rot2.x, rot2.y, rot2.z, rot2.w));
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
                             EventRegistry.instance.Invoke(BUTTON_OFF, info);
-                        });
+                        });*/
                         break;
 
                     case BTN_OFF:
