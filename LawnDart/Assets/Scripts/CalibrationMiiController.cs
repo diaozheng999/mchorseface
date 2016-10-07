@@ -1,15 +1,32 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityCoroutine = System.Collections.IEnumerator;
 using PGT.Core;
 
-
 namespace McHorseface.LawnDart
 {
-    enum MiiGender {
-        Male, Female, Random
-    }
-    public class MiiAnimationController : MonoBehaviour {
+    public class CalibrationMiiController : MonoBehaviour
+    {
+        [SerializeField]
+        float CalibrationAnimProb = 0.5f;
+
+        protected UnityCoroutine DoWave()
+        {
+            yield return new WaitForEndOfFrame();
+            while (doWave)
+            {
+                if(Random.value < waveChance)
+                {
+                    if(Random.value < CalibrationAnimProb)
+                    {
+                        anim.SetTrigger("DoCalib");
+                    }else
+                    {
+                        anim.SetTrigger("DoWave0");
+                    }
+                }
+            }
+        }
+ 
 
         [SerializeField]
         MiiGender gender = MiiGender.Random;
@@ -45,8 +62,9 @@ namespace McHorseface.LawnDart
 
         public static string MII_HIT = "mii_ouch";
 
-	    // Use this for initialization
-	    void Start () {
+        // Use this for initialization
+        void Start()
+        {
             //disable all body and hair types
             foreach (var b in maleBodies) b.SetActive(false);
             foreach (var b in femaleBodies) b.SetActive(false);
@@ -70,9 +88,9 @@ namespace McHorseface.LawnDart
                 case MiiGender.Male:
                     body_id = Mathf.FloorToInt(Random.value * maleBodies.Length);
                     maleBodies[body_id].SetActive(true);
-                    
+
                     hair_id = Mathf.FloorToInt(Random.value * maleHair.Length);
-                    
+
                     maleHair[hair_id].SetActive(true);
 
 
@@ -101,27 +119,13 @@ namespace McHorseface.LawnDart
 
             anim = GetComponent<Animator>();
 
-            anim.SetFloat("IdleSpeed", 2 +  (Random.value - 0.5f));
+            anim.SetFloat("IdleSpeed", 2 + (Random.value - 0.5f));
 
             StartCoroutine(DoWave());
 
             EventRegistry.instance.AddEventListener("killall", () => Fragment(Vector3.zero), false);
-	    }
-	
-        protected virtual UnityCoroutine DoWave ()
-        {
-            yield return new WaitForEndOfFrame();
-            while (doWave)
-            {
-                if (Random.value < waveChance)
-                {
-                    anim.SetTrigger(waves[Mathf.FloorToInt(Random.value * 3)]);
-                }
-                yield return new WaitForSeconds(Random.value);
-            }
-
-            doWave = false;
         }
+
 
         public void Fragment(Vector3 position)
         {
@@ -141,7 +145,7 @@ namespace McHorseface.LawnDart
                 rb.AddExplosionForce(100f, position, 20, 10f, ForceMode.Acceleration);
             }
         }
-        
+
 
         void OnEnable()
         {

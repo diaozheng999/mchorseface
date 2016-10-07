@@ -78,6 +78,7 @@
     <Compile Include="Assets\PGT\Scripts\Core\SyncMonoBehaviour.cs" />
     <Compile Include="Assets\PGT\Scripts\Core\Tuple.cs" />
     <Compile Include="Assets\PGT\Scripts\Core\UnityExecutionThread.cs" />
+    <Compile Include="Assets\Scripts\CalibrationMiiController.cs" />
     <Compile Include="Assets\Scripts\DartController.cs" />
     <Compile Include="Assets\Scripts\DemoController.cs" />
     <Compile Include="Assets\Scripts\DemoCube.cs" />
