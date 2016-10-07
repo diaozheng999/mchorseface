@@ -10,6 +10,9 @@ namespace McHorseface.LawnDart
         [SerializeField]
         Rigidbody rb;
 
+        [SerializeField]
+        GameObject blood;
+
         const string WARP_TARGET = "WarpTarget";
         const string MII = "Mii";
 
@@ -30,7 +33,14 @@ namespace McHorseface.LawnDart
             if (other.CompareTag(MII))
             {
                 other.GetComponentInChildren<MiiAnimationController>().Fragment(transform.position);
-            }else
+                
+                GameObject newBlood = Instantiate(blood);
+                newBlood.transform.parent = gameObject.transform;
+                newBlood.transform.localPosition = new Vector3(0, 0, 0);
+                newBlood.GetComponent<Rigidbody>().velocity += new Vector3(0, 2, 0);
+                
+            }
+            else
             {
                 if (rb != null) rb.isKinematic = true;
             }

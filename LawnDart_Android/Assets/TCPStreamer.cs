@@ -226,6 +226,7 @@ namespace McHorseface.LawnDartController
             {
                 pressed = false;
                 stream.WriteByte(BTN_OFF);
+                buffer[0] = 0x13;
                 writes = true;
             }
             if (writes)
