@@ -42,6 +42,13 @@ namespace McHorseface.LawnDart
         Rigidbody collapsed;
         [SerializeField]
         Collider collapsedCollider;
+        
+
+        [SerializeField]
+        protected float blinkChance = 0.2f;
+
+        [SerializeField]
+        protected MeshRenderer head;
 
         public static string MII_HIT = "mii_ouch";
 
