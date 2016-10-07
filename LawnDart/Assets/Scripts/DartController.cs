@@ -38,7 +38,8 @@ namespace McHorseface.LawnDart
                 newBlood.transform.parent = gameObject.transform;
                 newBlood.transform.localPosition = new Vector3(0, 0, 0);
                 newBlood.GetComponent<Rigidbody>().velocity += new Vector3(0, 2, 0);
-                
+
+                Destroy(rb.gameObject);
             }
             else
             {

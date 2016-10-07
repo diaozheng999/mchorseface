@@ -940,7 +940,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 32
+  m_Constraints: 16
   m_CollisionDetection: 0
 --- !u!54 &54000011626650014
 Rigidbody:
@@ -1044,8 +1044,11 @@ MonoBehaviour:
   - {fileID: 1000010440606488}
   - {fileID: 1000010747986200}
   waveChance: 0.2
+  alive: 1
   collapsed: {fileID: 54000011204275808}
   collapsedCollider: {fileID: 136000012431253230}
+  blinkChance: 0.2
+  head: {fileID: 0}
 --- !u!135 &135000011214872014
 SphereCollider:
   m_ObjectHideFlags: 1

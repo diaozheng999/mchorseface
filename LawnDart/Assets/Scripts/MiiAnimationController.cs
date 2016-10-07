@@ -39,7 +39,7 @@ namespace McHorseface.LawnDart
         GameObject activeBody;
 
         [SerializeField]
-        Rigidbody collapsed;
+        protected Rigidbody collapsed;
         [SerializeField]
         Collider collapsedCollider;
         
@@ -130,7 +130,7 @@ namespace McHorseface.LawnDart
             doWave = false;
         }
 
-        public void Fragment(Vector3 position)
+        public virtual void Fragment(Vector3 position)
         {
             if (!alive) return;
             alive = false;

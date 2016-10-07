@@ -156,7 +156,7 @@ namespace McHorseface.LawnDart
             stream.Flush();
         }
 
-        public void Calibrate()
+        public void Calibrate(Vector3 fwd)
         {
             //aesthetics
             var mat = Sprite.GetComponentInChildren<MeshRenderer>().material;
@@ -165,7 +165,7 @@ namespace McHorseface.LawnDart
 
             transform.rotation = Quaternion.identity;
 
-            transform.rotation = Quaternion.FromToRotation(Post.transform.forward, Vector3.forward);
+            transform.rotation = Quaternion.FromToRotation(Post.transform.forward, fwd);
 
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         }
@@ -197,7 +197,6 @@ namespace McHorseface.LawnDart
             {
 
                 byte[] buffer = udpClient.Receive(ref ipep);
-                if (buffer[0] == 0x13) { Debug.Log("Huzzah"); }
                 if (buffer[0] == POS_UPDATE)
                 {
                     accel.x = BitConverter.ToSingle(buffer, 1);
@@ -207,9 +206,7 @@ namespace McHorseface.LawnDart
                     rot.y = BitConverter.ToSingle(buffer, 17);
                     rot.z = BitConverter.ToSingle(buffer, 21);
                     rot.w = BitConverter.ToSingle(buffer, 25);
-                    Debug.Log("UPDATE");
                 }
-                else { Debug.Log("DON'T UPDATE"); }
                 
             }
         }

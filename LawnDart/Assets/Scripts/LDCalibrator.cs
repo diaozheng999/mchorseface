@@ -11,6 +11,8 @@ namespace McHorseface.LawnDart
         public const string CALIB_TRYOUT = "calib_tryout";
 
         [SerializeField]
+        Text gazeSlide;
+        [SerializeField]
         GameObject calibrationSlide;
         [SerializeField]
         GameObject confirmationSlide;
@@ -43,6 +45,9 @@ namespace McHorseface.LawnDart
 
         Vector3 cfmYesOrigin;
         Vector3 cfmNoOrigin;
+
+        int gazeOnListener;
+        int gazeOffListener;
 
         enum ButtonState
         {
@@ -77,29 +82,86 @@ namespace McHorseface.LawnDart
             hand0.SetActive(false);
             hand1.SetActive(false);
         }
+        
+
 
         UnityCoroutine CalibrationStart()
         {
-
-            calibrationSlide.SetActive(true);
+            calibrationSlide.SetActive(false);
             confirmationSlide.SetActive(false);
             confirmationYes.SetActive(false);
             confirmationNo.SetActive(false);
             trySlide.SetActive(false);
             finalSlide.SetActive(false);
-            hand.SetActive(true);
+            hand.SetActive(false);
             hand0.SetActive(false);
             hand1.SetActive(false);
             warp.SetActive(false);
+            gazeSlide.gameObject.SetActive(true);
             doHandFlip = false;
             enabled = false;
-            EventRegistry.instance.AddEventListener(LDController.BUTTON_OFF, () =>
-            {
-                LDController.instance.Calibrate();
-            });
 
-            yield return new WaitForEvent(LDController.BUTTON_OFF);
+            gazeOnListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_OFF, () =>
+            {
+                gazeSlide.text = "Look at Callie";
+            }, true);
+
+            gazeOffListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_ON, () =>
+            {
+                gazeSlide.text = "Press screen to continue";
+            }, true);
+
+            yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_START);
             continueSound.Play();
+            calibrationSlide.SetActive(true);
+            gazeSlide.gameObject.SetActive(false);
+            
+            hand.SetActive(true);
+            EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_ON, gazeOnListener);
+            EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_OFF, gazeOffListener);
+
+            yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_END);
+            continueSound.Play();
+            trySlide.SetActive(true);
+            doHandFlip = true;
+            StartCoroutine(FlipHands());
+            EventRegistry.instance.Invoke(CALIB_TRYOUT);
+
+            trySlide.SetActive(true);
+            confirmationSlide.SetActive(false);
+            confirmationYes.SetActive(false);
+            confirmationNo.SetActive(false);
+
+            calibrationSlide.SetActive(false);
+            hand.SetActive(false);
+
+            for (int i=0; i < 5; i++)
+            {
+                yield return new WaitForEvent(LDController.BUTTON_OFF);
+            }
+            continueSound.Play();
+            var n_mii = Instantiate(mii);
+            n_mii.transform.position = new Vector3(0, 1, 4);
+
+
+
+            // whenever a button_4_off is sent, a button_off is also sent
+            yield return new WaitForEvent(MiiAnimationController.MII_HIT);
+            yield return new WaitForSeconds(1f);
+
+            doHandFlip = false;
+            hand0.SetActive(false);
+            hand1.SetActive(false);
+
+            trySlide.SetActive(false);
+            finalSlide.SetActive(true);
+            continueSound.Play();
+
+            
+
+            warp.SetActive(true);
+            /*
+            yield return new WaitForEvent(LDController.BUTTON_OFF);
             buttonState = ButtonState.None;
 
             while(buttonState == ButtonState.None)
@@ -123,44 +185,12 @@ namespace McHorseface.LawnDart
             }
             if(buttonState == ButtonState.Yes)
             {
-                trySlide.SetActive(true);
-                confirmationSlide.SetActive(false);
-                confirmationYes.SetActive(false);
-                confirmationNo.SetActive(false);
-                EventRegistry.instance.Invoke(CALIB_TRYOUT);
-                doHandFlip = true;
-                StartCoroutine(FlipHands());
-
-
-                for (int i=0; i < 5; i++)
-                {
-                    yield return new WaitForEvent(LDController.BUTTON_OFF);
-                }
-                continueSound.Play();
-                var n_mii = Instantiate(mii);
-                n_mii.transform.position = new Vector3(0, 1, 4);
-
-
-
-                // whenever a button_4_off is sent, a button_off is also sent
-                yield return new WaitForEvent(MiiAnimationController.MII_HIT);
-                yield return new WaitForSeconds(1f);
-
-                doHandFlip = false;
-                hand0.SetActive(false);
-                hand1.SetActive(false);
-
-                trySlide.SetActive(false);
-                finalSlide.SetActive(true);
-                continueSound.Play();
-
-                warp.SetActive(true);
 
             }
             else
             {
                 StartCoroutine(CalibrationStart());
-            }
+            }*/
 
         }
 
