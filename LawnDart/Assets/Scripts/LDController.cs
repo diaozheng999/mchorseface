@@ -78,6 +78,8 @@ namespace McHorseface.LawnDart
         Quaternion calibratedRotation;
         string ipaddr;
 
+        bool quatblocked = false;
+
         // we're not locking cos rot and accel are not updated at all
         public Quaternion Rot { get {
                 return rot;
@@ -349,8 +351,26 @@ namespace McHorseface.LawnDart
             if(tcpClient!=null) tcpClient.Close();
         }
 
-	    // Update is called once per frame
-	    void Update () {
+        public void SetOrientationForce(Quaternion rot)
+        {
+            StartCoroutine(_setOrientation(rot));
+        }
+
+        UnityCoroutine _setOrientation(Quaternion rot)
+        {
+            Internal.transform.localRotation = rot;
+            quatblocked = true;
+            yield return new WaitForSeconds(0.1f);
+
+            EventRegistry.instance.Invoke("QSet");
+
+            yield return new WaitForSeconds(0.1f);
+            quatblocked = false;
+        }
+
+        // Update is called once per frame
+        void Update () {
+            if (quatblocked) return;
             Internal.transform.localRotation = rot;
 	    }
     }

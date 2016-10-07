@@ -78,21 +78,32 @@ namespace McHorseface.LawnDart
             }
         }
 
-        void LaunchDart(object packet)
+        bool isLaunching = false;
+        void LaunchDart(object p)
+        {
+            StartCoroutine(_LaunchDart(p));
+        }
+
+        UnityCoroutine _LaunchDart(object packet)
         {
             var Packet = (Tuple<Vector3, Quaternion>)packet;
             enabled = false;
             sprite.SetActive(false);
 
+            LDController.instance.SetOrientationForce(Packet.cdr);
+
+            yield return new WaitForEvent("QSet");
+
+
             var dup = Instantiate(dart);
             dup.transform.position = Packet.car;
-            dup.transform.rotation = LDController.instance.GetCalibratedRotation(Packet.cdr);
+            dup.transform.rotation = LDController.instance.GetCalibratedRotation();
             var rb = dup.GetComponent<Rigidbody>();
             rb.position = transform.position;
 
             Vector3 gravity =  transform.InverseTransformVector(Vector3.down);
 
-            rb.AddRelativeForce(scaleFactor * Vector3.Magnitude(LDController.instance.Accel - gravity) * Vector3.forward, ForceMode.VelocityChange);
+            rb.AddRelativeForce(scaleFactor * Vector3.Magnitude(Packet.car - gravity) * Vector3.forward, ForceMode.VelocityChange);
             rb.AddTorque(transform.rotation.eulerAngles);
 
             // disable darts
