@@ -95,11 +95,12 @@ namespace McHorseface.LawnDart
             yield return new WaitForEvent("QSet");
 
 
-            var dup = Instantiate(dart);
-            dup.transform.position = Packet.car;
-            dup.transform.rotation = LDController.instance.GetCalibratedRotation();
+            var dup = (GameObject)Instantiate(dart, transform.position, LDController.instance.GetCalibratedRotation(), null);
+            
             var rb = dup.GetComponent<Rigidbody>();
             rb.position = transform.position;
+
+            Debug.Log(transform.position);
 
             Vector3 gravity =  transform.InverseTransformVector(Vector3.down);
 

@@ -181,6 +181,11 @@ Prefab:
       propertyPath: SceneChange
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114000012607604614, guid: b37832a99a7ae7d49880139b691bebdb,
+        type: 2}
+      propertyPath: NextScene
+      value: Level1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b37832a99a7ae7d49880139b691bebdb, type: 2}
   m_IsPrefabParent: 0

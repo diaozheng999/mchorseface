@@ -449,7 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9e4259f12724a41b68257ee0c1fb70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 0.1
+  scaleFactor: 0.08
   distanceIndicator: {fileID: 114000012428095504}
   imperial: 0
 --- !u!114 &114000012428095504
