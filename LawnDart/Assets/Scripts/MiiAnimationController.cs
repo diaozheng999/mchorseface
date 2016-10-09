@@ -147,6 +147,11 @@ namespace McHorseface.LawnDart
                 rb.isKinematic = false;
                 rb.AddExplosionForce(100f, position, 20, 10f, ForceMode.Acceleration);
             }
+
+            this.SetTimeout(10f, () =>
+            {
+                Destroy(collapsed.gameObject);
+            });
         }
         
 

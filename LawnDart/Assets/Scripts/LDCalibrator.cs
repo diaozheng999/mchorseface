@@ -13,6 +13,8 @@ namespace McHorseface.LawnDart
         [SerializeField]
         Text gazeSlide;
         [SerializeField]
+        GameObject waitSlide;
+        [SerializeField]
         GameObject calibrationSlide;
         [SerializeField]
         GameObject confirmationSlide;
@@ -23,18 +25,20 @@ namespace McHorseface.LawnDart
         [SerializeField]
         GameObject trySlide;
         [SerializeField]
-        GameObject hand;
-        [SerializeField]
-        GameObject finalSlide;
+        GameObject[] finalSlide;
         [SerializeField]
         GameObject mii;
         [SerializeField]
-        GameObject warp;
+        GameObject[] warp;
 
         [SerializeField]
         GameObject hand0;
         [SerializeField]
         GameObject hand1;
+
+        [SerializeField]
+        GameObject Callie;
+
         bool doHandFlip = false;
 
         [SerializeField]
@@ -87,26 +91,35 @@ namespace McHorseface.LawnDart
 
         UnityCoroutine CalibrationStart()
         {
+
+
+            waitSlide.SetActive(true);
             calibrationSlide.SetActive(false);
             confirmationSlide.SetActive(false);
             confirmationYes.SetActive(false);
             confirmationNo.SetActive(false);
             trySlide.SetActive(false);
-            finalSlide.SetActive(false);
-            hand.SetActive(false);
+            foreach (var s in finalSlide) s.SetActive(false);
             hand0.SetActive(false);
             hand1.SetActive(false);
-            warp.SetActive(false);
-            gazeSlide.gameObject.SetActive(true);
+            gazeSlide.gameObject.SetActive(false);
             doHandFlip = false;
             enabled = false;
 
-            gazeOnListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_OFF, () =>
+            foreach (var w in warp) w.SetActive(false);
+
+            yield return new WaitUntil(() => LDController.instance != null && LDController.instance.enableControls);
+            waitSlide.SetActive(false);
+            var callie = Instantiate(Callie);
+            callie.transform.position = new Vector3(0f, 5f, 4f);
+            gazeSlide.gameObject.SetActive(true);
+
+            gazeOffListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_OFF, () =>
             {
                 gazeSlide.text = "Look at Callie";
             }, true);
 
-            gazeOffListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_ON, () =>
+            gazeOnListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_ON, () =>
             {
                 gazeSlide.text = "Press screen to continue";
             }, true);
@@ -116,7 +129,6 @@ namespace McHorseface.LawnDart
             calibrationSlide.SetActive(true);
             gazeSlide.gameObject.SetActive(false);
             
-            hand.SetActive(true);
             EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_ON, gazeOnListener);
             EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_OFF, gazeOffListener);
 
@@ -133,7 +145,6 @@ namespace McHorseface.LawnDart
             confirmationNo.SetActive(false);
 
             calibrationSlide.SetActive(false);
-            hand.SetActive(false);
 
             for (int i=0; i < 5; i++)
             {
@@ -154,43 +165,14 @@ namespace McHorseface.LawnDart
             hand1.SetActive(false);
 
             trySlide.SetActive(false);
-            finalSlide.SetActive(true);
             continueSound.Play();
 
-            
-
-            warp.SetActive(true);
-            /*
-            yield return new WaitForEvent(LDController.BUTTON_OFF);
-            buttonState = ButtonState.None;
-
-            while(buttonState == ButtonState.None)
+            for(int i=0; i<3; i++)
             {
-                calibrationSlide.SetActive(false);
-                hand.SetActive(false);
-                confirmationSlide.SetActive(true);
-                confirmationYes.gameObject.SetActive(true);
-                confirmationNo.gameObject.SetActive(true);
-            
-                enabled = true;
-
-                confirmationNo.transform.localScale = 0.005f * Vector3.one;
-                confirmationNo.transform.position = cfmNoOrigin;
-
-                confirmationYes.transform.localScale = 0.005f * Vector3.one;
-                confirmationYes.transform.position = cfmYesOrigin;
-
-                yield return new WaitForEvent(LDController.BUTTON_OFF);
-                continueSound.Play();
+                warp[i].SetActive(true);
+                finalSlide[i].SetActive(true);
+                yield return new WaitForSeconds(0.4f);
             }
-            if(buttonState == ButtonState.Yes)
-            {
-
-            }
-            else
-            {
-                StartCoroutine(CalibrationStart());
-            }*/
 
         }
 

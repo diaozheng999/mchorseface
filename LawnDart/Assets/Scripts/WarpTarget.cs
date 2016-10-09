@@ -11,13 +11,24 @@ namespace McHorseface.LawnDart
         [SerializeField]
         string NextScene = "GameScene";
 
+        [SerializeField]
+        Material sceneChangeTexture;
+
+        [SerializeField]
+        Material teleportTexture;
+
         int dartlayer = -1;
 
         void Start ()
         {
             dartlayer = LayerMask.NameToLayer("LawnDart");
-        }
+            
+            foreach (var m in GetComponentsInChildren<MeshRenderer>())
+            {
+                m.material = SceneChange ? sceneChangeTexture : teleportTexture;
+            }
 
+        }
 
         void OnTriggerEnter (Collider other)
         {
@@ -28,8 +39,10 @@ namespace McHorseface.LawnDart
                     SceneManager.LoadScene(NextScene);
                 }else
                 {
-                    Player.instance.teleport(transform.position);
+                    Player.instance.Teleport(transform.position);
                 }
+
+                Destroy(gameObject);
             }
         }
     }

@@ -576,6 +576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   black: {fileID: 1000012159709982}
   tryout: 1
+  Callie: {fileID: 1000013468702802, guid: a1a9c6471a78fe84ab5fc5793a0115b0, type: 2}
 --- !u!124 &124000012688473662
 Behaviour:
   m_ObjectHideFlags: 1

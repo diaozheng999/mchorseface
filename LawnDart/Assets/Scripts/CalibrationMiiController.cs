@@ -10,6 +10,7 @@ namespace McHorseface.LawnDart
         public const string GAZE_OFF = "callie_gaze_off";
         public const string CALIB_SEQ_START = "callie_seq_start";
         public const string CALIB_SEQ_END = "callie_seq_end";
+        public const string CALLIE_HIT = "callie_hit";
 
         public static CalibrationMiiController instance;
 
@@ -34,6 +35,9 @@ namespace McHorseface.LawnDart
         [SerializeField]
         float yViewRange = 0.5f;
 
+        [SerializeField]
+        AudioSource calibrationSound;
+
         bool isBlinking = false;
         bool isAiming = false;
         bool isExcited = false;
@@ -54,11 +58,13 @@ namespace McHorseface.LawnDart
 
             StartCoroutine(DoWave());
 
+            instance = this;
+            
+        }
 
-            EventRegistry.instance.AddEventListener(LDCalibrator.CALIB_TRYOUT, () =>
-            {
-                collapsed.transform.position = new Vector3(2.5f, 0f, 1f);
-            });
+        public void Reposition(Vector3 pos)
+        {
+            collapsed.transform.position = pos;
         }
 
         protected override UnityCoroutine DoWave()
@@ -102,10 +108,15 @@ namespace McHorseface.LawnDart
         public override void Fragment(Vector3 position)
         {
             base.Fragment(position);
-            var dup = Instantiate(calliePrefab);
-            dup.transform.position = transform.position;
-            dup.transform.rotation = transform.rotation;
+
+            this.SetTimeout(2f, () =>
+            {
+                EventRegistry.instance.Invoke(CALLIE_HIT);
+                Destroy(collapsed.gameObject);
+            });
+
         }
+
 
         void Update()
         {
@@ -114,6 +125,17 @@ namespace McHorseface.LawnDart
 
             Vector3 point = cam.WorldToViewportPoint(transform.position + 0.8f * Vector3.up) - p;
 
+            // keep callie looking at the camera
+            Vector3 dist = Camera.main.transform.position - transform.position;
+            dist = Vector3.ProjectOnPlane(dist, Vector3.up);
+            collapsed.transform.LookAt(transform.position - dist, Vector3.up);
+
+
+            // teleport close to the player if she's too far away
+            if(dist.sqrMagnitude > 100)
+            {
+                collapsed.transform.position = Camera.main.transform.position + 3f * (Camera.main.transform.forward + Camera.main.transform.right) + 5f * Vector3.up;
+            }
 
             if (Mathf.Abs(point.x) < xViewRange && Mathf.Abs(point.y) < yViewRange)
             {
@@ -121,10 +143,12 @@ namespace McHorseface.LawnDart
                 {
                     anim.SetBool("LineOfSight", true);
                     isExcited = true;
-                    StartCoroutine(CalibrationSequence());
                     EventRegistry.instance.Invoke(GAZE_ON);
                     Debug.Log("Callie: Gaze on");
                     isCalibrating = true;
+                    
+                    if(LDController.instance.enableControls)
+                        StartCoroutine(CalibrationSequence());
                 }
             }
             else if (isExcited)
@@ -143,39 +167,89 @@ namespace McHorseface.LawnDart
         }
 
 
+        int current_try = -1;
+
         UnityCoroutine CalibrationSequence()
         {
             calibration_state = 0;
-            while (calibration_state >= 0)
+            for (int iter = 0; calibration_state >= 0 && alive; iter++)
             {
                 switch (calibration_state)
                 {
                     case 0:
+                        
                         calibration_state = 1;
+                        Debug.Log("Callie: Sending vibration sequence.");
+
+                        LDController.instance.Vibrate();
+                        yield return new WaitForSeconds(0.6f);
+                        LDController.instance.Vibrate();
                         yield return new WaitForEndOfFrame();
+
+                        Debug.Log("Callie: switching states.");
                         continue;
                     case 1:
-                        yield return new WaitForEvent(LDController.BUTTON_OFF);
-                        Debug.Log("Callie: Calibration Sequence started");
-                        calibration_state = 2;
-                        EventRegistry.instance.Invoke(CALIB_SEQ_START);
+
+                        var rot = LDController.instance.GetRawRotation().eulerAngles;
+
+                        var vert_angle = rot.z % 360f;
+
+                        if(vert_angle > 0 && vert_angle < 90)
+                        {
+                            calibrationSound.Play();
+                            calibration_state = 4;
+                            current_try = iter;
+                            Debug.Log("Callie: Phone in pos. Current try="+current_try);
+                            EventRegistry.instance.SetTimeout(3f, (int t) =>
+                            {
+                                Debug.Log("Callie: In-pose timeout calibration_state="+calibration_state+" current_try="+current_try);
+                                if (calibration_state == 4 && current_try == t)
+                                {
+                                    Debug.Log("Callie: timer input accepted");
+                                    calibration_state = 5;
+                                }else
+                                {
+                                    Debug.Log("Callie: timer input rejected");
+                                }
+                            }, iter);
+                            Debug.Log("Callie: Calibration Sequence started");
+                            EventRegistry.instance.Invoke(CALIB_SEQ_START);
+                        }
+                        yield return new WaitForEndOfFrame();
                         continue;
-                    case 2:
-                        yield return new WaitForEvent(LDController.BUTTON_OFF);
+                        
+                    case 4:
+                        var rot2 = LDController.instance.GetRawRotation().eulerAngles;
 
+                        var vert_angle2 = rot2.z % 360f;
 
-                        var fwd =  collapsed.transform.position - cam.transform.position;
-                        LDController.instance.Calibrate(fwd.normalized);
+                        if (vert_angle2 < 0 || vert_angle2 > 90 || LDController.instance.Accel.sqrMagnitude > 1.2f || LDController.instance.Accel.sqrMagnitude < 0.8f)
+                        {
+                            Debug.Log("Callie: Phone out pos.");
+                            calibration_state = 1;
+                            calibrationSound.Stop();
+                            current_try = -1;
+                        }else
+                        {
+                            Debug.Log("Callie: Phone still in pos.");
+                        }
+                        yield return new WaitForEndOfFrame();
+                        continue;
 
+                    case 5:
+                        Vector3 dist =  Camera.main.transform.position - transform.position;
+                        dist = Vector3.ProjectOnPlane(dist, Vector3.up);
+                        LDController.instance.Calibrate(dist.normalized);
                         EventRegistry.instance.Invoke(CALIB_SEQ_END);
                         calibration_state = -1;
                         Debug.Log("Callie: Calibration sequence done.");
+                        yield return new WaitForEndOfFrame();
                         continue;
-
                 }
             }
             calibration_state = 0;
             isCalibrating = false;
+            anim.SetBool("LineOfSight", false);
         }
     }
 }

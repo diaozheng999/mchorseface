@@ -50,6 +50,7 @@ namespace McHorseface.LawnDart
         public const string BUTTON_4_OFF = "ld_btn_4_off";
 
         public static LDController instance = null;
+        
 
         public string nextScene = "GameScene";
 
@@ -70,6 +71,9 @@ namespace McHorseface.LawnDart
         GameObject Internal;
 
         [SerializeField]
+        GameObject Callie;
+
+        [SerializeField]
         float ScaleFactor = 3f;
         
         Quaternion rot;
@@ -77,6 +81,10 @@ namespace McHorseface.LawnDart
 
         Quaternion calibratedRotation;
         string ipaddr;
+
+        bool quatblocked = false;
+        
+        public bool enableControls = false;
 
         // we're not locking cos rot and accel are not updated at all
         public Quaternion Rot { get {
@@ -97,7 +105,6 @@ namespace McHorseface.LawnDart
             if(instance != null)
             {
                 Debug.Log("Another copy of LDController is present.");
-
                 Destroy(gameObject);
                 return;
             }
@@ -220,12 +227,10 @@ namespace McHorseface.LawnDart
 
                 Vector3 accel2 = new Vector3(0, 0, 0);
                 Quaternion rot2 = new Quaternion(0, 0, 0, 0);
-                Debug.Log(buffer[0]);
                 switch (buffer[0])
                 {
                     case POS_UPDATE:
                         for (var i = 1; i < 29; i += stream.Read(buffer, i, 29 - i));
-                        Debug.Log("goes to 0x01");
                         accel2.x = BitConverter.ToSingle(buffer, 1);
                         accel2.y = BitConverter.ToSingle(buffer, 5);
                         accel2.z = BitConverter.ToSingle(buffer, 9);
@@ -245,79 +250,87 @@ namespace McHorseface.LawnDart
                         rot2.y = BitConverter.ToSingle(buffer, 17);
                         rot2.z = BitConverter.ToSingle(buffer, 21);
                         rot2.w = BitConverter.ToSingle(buffer, 25);
-                        Debug.Log("gets to 0x13");
-                        /*var info = new Tuple<Vector3, Quaternion>(new Vector3(accel2.x, accel2.y, accel2.z), new Quaternion(rot2.x, rot2.y, rot2.z, rot2.w));
+                        var info = new Tuple<Vector3, Quaternion>(new Vector3(accel2.x, accel2.y, accel2.z), new Quaternion(rot2.x, rot2.y, rot2.z, rot2.w));
+                        if(enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_OFF, info);
-                        });*/
+                                EventRegistry.instance.Invoke("FIRE", info);
+                        });
                         break;
 
                     case BTN_OFF:
                         // Event library is currently NOT thread-safe
                         Debug.Log("1 finger off");
+                        if (enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_OFF);
+                                EventRegistry.instance.Invoke(BUTTON_OFF);
                         });
                         break;
 
                     case BTN_ON:
                         Debug.Log("1 finger on");
+                        if (enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_ON);
+                                EventRegistry.instance.Invoke(BUTTON_ON);
                         });
                         break;
 
                     case BTN_2_OFF:
                         Debug.Log("2 fingers off");
                         // Event library is currently NOT thread-safe
+                        if (enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_2_OFF);
+                                EventRegistry.instance.Invoke(BUTTON_2_OFF);
                         });
                         break;
 
                     case BTN_2_ON:
                         Debug.Log("2 fingers on");
+                        if (enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_2_ON);
+                                EventRegistry.instance.Invoke(BUTTON_2_ON);
                         });
                         break;
 
                     case BTN_3_OFF:
                         Debug.Log("3 fingers off");
                         // Event library is currently NOT thread-safe
+                        if (enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_3_OFF);
+                                EventRegistry.instance.Invoke(BUTTON_3_OFF);
                         });
                         break;
 
                     case BTN_3_ON:
                         Debug.Log("3 fingers on");
+                        if (enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_3_ON);
+                                EventRegistry.instance.Invoke(BUTTON_3_ON);
                         });
                         break;
 
                     case BTN_4_OFF:
                         Debug.Log("4 fingers off");
                         // Event library is currently NOT thread-safe
+                        if (enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_4_OFF);
+                                EventRegistry.instance.Invoke(BUTTON_4_OFF);
                         });
                         break;
 
                     case BTN_4_ON:
                         Debug.Log("4 fingers on");
+                        if (enableControls)
                         UnityExecutionThread.instance.ExecuteInMainThread(() =>
                         {
-                            EventRegistry.instance.Invoke(BUTTON_4_ON);
+                                EventRegistry.instance.Invoke(BUTTON_4_ON);
                         });
                         break;
 
@@ -333,6 +346,17 @@ namespace McHorseface.LawnDart
             return Post.transform.rotation;
         }
 
+        public Quaternion GetRawRotation()
+        {
+            return Internal.transform.localRotation;
+        }
+
+        public Quaternion GetCalibratedRotation(Quaternion info)
+        {
+            Internal.transform.localRotation = info;
+            return GetCalibratedRotation();
+        }
+
         public Quaternion GetInnerRotation()
         {
             return Post.transform.localRotation;
@@ -345,8 +369,32 @@ namespace McHorseface.LawnDart
             if(tcpClient!=null) tcpClient.Close();
         }
 
-	    // Update is called once per frame
-	    void Update () {
+        public void SetOrientationForce(Quaternion rot)
+        {
+            StartCoroutine(_setOrientation(rot));
+        }
+
+        UnityCoroutine _setOrientation(Quaternion rot)
+        {
+            Internal.transform.localRotation = rot;
+            quatblocked = true;
+            yield return new WaitForSeconds(0.1f);
+
+            EventRegistry.instance.Invoke("QSet");
+
+            yield return new WaitForSeconds(0.1f);
+            quatblocked = false;
+        }
+
+        public void EnableControls()
+        {
+            enableControls = true;
+            Sprite.SetActive(false);
+        }
+
+        // Update is called once per frame
+        void Update () {
+            if (quatblocked) return;
             Internal.transform.localRotation = rot;
 	    }
     }

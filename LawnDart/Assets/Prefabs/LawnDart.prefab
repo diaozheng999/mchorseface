@@ -246,7 +246,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013152071152}
   - 54: {fileID: 54000013270227256}
-  - 114: {fileID: 114000010820643536}
   - 138: {fileID: 138000010921978744}
   m_Layer: 8
   m_Name: LawnDart
@@ -624,7 +623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.29411763, g: 0.29411763, b: 0.29411763, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -632,7 +631,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 5f553d07a3e20c44da7a971aea629054, type: 3}
     m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
@@ -645,20 +644,6 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 1.47m
---- !u!114 &114000010820643536
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014199137540}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec63f9d6451646b408d9e150d5c57df8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  blood: {fileID: 1000011892261382, guid: 6afa2f5da1fe0e648a37e037039451ec, type: 2}
-  isTryout: 1
 --- !u!114 &114000011656885414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -692,7 +677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 54000013270227256}
-  blood: {fileID: 0}
+  blood: {fileID: 1000012599847072, guid: bb391adb839fe6c4ebbe39c6b08de190, type: 2}
   isTryout: 1
 --- !u!114 &114000012385957356
 MonoBehaviour:

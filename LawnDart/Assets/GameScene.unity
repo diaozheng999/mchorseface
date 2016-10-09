@@ -420,11 +420,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cd3dc8b22c35fc5429d040f555f9b23d, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &348126210 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1000012159709982, guid: 0b226223fc22bb24ca29e71c5b603ca8,
-    type: 2}
-  m_PrefabInternal: {fileID: 1070070847}
 --- !u!1001 &372307902
 Prefab:
   m_ObjectHideFlags: 0
@@ -737,27 +732,14 @@ Prefab:
       propertyPath: isTryout
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114000011024994578, guid: 0b226223fc22bb24ca29e71c5b603ca8,
+        type: 2}
+      propertyPath: tryout
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0b226223fc22bb24ca29e71c5b603ca8, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1070070848 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1000012799131912, guid: 0b226223fc22bb24ca29e71c5b603ca8,
-    type: 2}
-  m_PrefabInternal: {fileID: 1070070847}
---- !u!114 &1070070849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1070070848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15287759179acd44db8f795c456ba229, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  black: {fileID: 348126210}
-  tryout: 0
 --- !u!1001 &1134002684
 Prefab:
   m_ObjectHideFlags: 0

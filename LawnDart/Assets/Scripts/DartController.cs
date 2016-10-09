@@ -34,12 +34,10 @@ namespace McHorseface.LawnDart
             {
                 other.GetComponentInChildren<MiiAnimationController>().Fragment(transform.position);
                 
-                GameObject newBlood = Instantiate(blood);
-                newBlood.transform.parent = gameObject.transform;
-                newBlood.transform.localPosition = new Vector3(0, 0, 0);
-                newBlood.GetComponent<Rigidbody>().velocity += new Vector3(0, 2, 0);
+                Instantiate(blood, other.transform.position + 1f * Vector3.up + 0.3f *(transform.position - Camera.main.transform.forward).normalized, Quaternion.identity, null);
 
                 Destroy(rb.gameObject);
+                
             }
             else
             {

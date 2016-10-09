@@ -61,8 +61,8 @@ namespace McHorseface.LawnDart
             enabled = true;
             sprite.SetActive(true);
 
-            launch_event_listener = EventRegistry.instance.AddEventListener(LDController.BUTTON_OFF, LaunchDart, true);
-            eventListeners.Add(new Tuple<string, int>(LDController.BUTTON_OFF, launch_event_listener));
+            launch_event_listener = EventRegistry.instance.AddEventListener("FIRE", LaunchDart, true);
+            eventListeners.Add(new Tuple<string, int>("FIRE", launch_event_listener));
         }
 
         void Update()
@@ -78,20 +78,32 @@ namespace McHorseface.LawnDart
             }
         }
 
-        void LaunchDart()
+        bool isLaunching = false;
+        void LaunchDart(object p)
         {
+            StartCoroutine(_LaunchDart(p));
+        }
+
+        UnityCoroutine _LaunchDart(object packet)
+        {
+            var Packet = (Tuple<Vector3, Quaternion>)packet;
             enabled = false;
             sprite.SetActive(false);
 
+            LDController.instance.SetOrientationForce(Packet.cdr);
+
+            yield return new WaitForEvent("QSet");
+
+
             var dup = Instantiate(dart);
-            dup.transform.position = transform.position;
+            dup.transform.position = Packet.car;
             dup.transform.rotation = LDController.instance.GetCalibratedRotation();
             var rb = dup.GetComponent<Rigidbody>();
             rb.position = transform.position;
 
             Vector3 gravity =  transform.InverseTransformVector(Vector3.down);
 
-            rb.AddRelativeForce(scaleFactor * Vector3.Magnitude(LDController.instance.Accel - gravity) * Vector3.forward, ForceMode.VelocityChange);
+            rb.AddRelativeForce(scaleFactor * Vector3.Magnitude(Packet.car - gravity) * Vector3.forward, ForceMode.VelocityChange);
             rb.AddTorque(transform.rotation.eulerAngles);
 
             // disable darts

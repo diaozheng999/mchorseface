@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityCoroutine = System.Collections.IEnumerator;
+using PGT.Core.Func;
 
 
 namespace McHorseface.LawnDart
@@ -46,6 +48,17 @@ namespace McHorseface.LawnDart
                 Mathf.Atan2(sin.y, cos.y),
                 Mathf.Atan2(sin.z, cos.z)
             ) * Mathf.Rad2Deg;
+        }
+
+        public static Coroutine SetTimeout(this MonoBehaviour me, float duration, Lambda delayed)
+        {
+            return me.StartCoroutine(__timeout_coroutine(duration, delayed));
+        } 
+
+        private static UnityCoroutine __timeout_coroutine(float duration, Lambda delayed)
+        {
+            yield return new WaitForSeconds(duration);
+            delayed();
         }
     }
 }
