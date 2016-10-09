@@ -121,7 +121,7 @@ namespace McHorseface.LawnDart
 
             gazeOnListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_ON, () =>
             {
-                gazeSlide.text = "Press screen to continue";
+                gazeSlide.text = "Hold the phone up to your ear";
             }, true);
 
             yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_START);
