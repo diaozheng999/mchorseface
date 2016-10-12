@@ -6,10 +6,14 @@ namespace McHorseface.LawnDart
 {
     public class WarpTarget : MonoBehaviour
     {
+        public const string WARP = "warp";
+
         [SerializeField]
         bool SceneChange = true;
         [SerializeField]
         string NextScene = "GameScene";
+
+        static long _instance = 0;
 
         [SerializeField]
         Material sceneChangeTexture;
@@ -19,6 +23,9 @@ namespace McHorseface.LawnDart
 
         int dartlayer = -1;
 
+        int targetListener;
+        long instance;
+
         void Start ()
         {
             dartlayer = LayerMask.NameToLayer("LawnDart");
@@ -27,23 +34,38 @@ namespace McHorseface.LawnDart
             {
                 m.material = SceneChange ? sceneChangeTexture : teleportTexture;
             }
-
+            instance = ++_instance;
+            targetListener = EventRegistry.instance.AddEventListener(WARP,
+                (e) =>
+                {
+                    if (instance != (long)e)
+                    {
+                        gameObject.SetActive(true);
+                    }
+                }, true);
         }
 
         void OnTriggerEnter (Collider other)
         {
-            if (other.gameObject.layer == dartlayer)
+            if (other.gameObject.layer == dartlayer && !other.GetComponent<DartController>().hitGround)
             {
+                Debug.Log(other.gameObject.name);
                 if (SceneChange)
                 {
                     SceneManager.LoadScene(NextScene);
                 }else
                 {
                     Player.instance.Teleport(transform.position);
+                    EventRegistry.instance.Invoke(WARP, instance);
                 }
 
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
+        }
+
+        void OnDestroy()
+        {
+            EventRegistry.instance.RemoveEventListener(WARP, targetListener);
         }
     }
 }

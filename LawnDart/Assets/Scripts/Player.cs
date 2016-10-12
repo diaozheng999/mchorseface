@@ -60,7 +60,7 @@ namespace McHorseface.LawnDart
                 yield return new WaitForSeconds(0.5f);
                 transform.position = pos;
                 black.SetActive(false);
-                CalibrationMiiController.instance.Reposition(pos);
+                CalibrationMiiController.instance.Reposition();
                 yield return new WaitForSeconds(1f);
             }
         }

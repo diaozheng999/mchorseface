@@ -17,6 +17,7 @@ namespace McHorseface.LawnDart
         const string MII = "Mii";
 
         public bool isTryout = true;
+        public bool hitGround = false;
 
         AudioSource hit;
 
@@ -41,7 +42,11 @@ namespace McHorseface.LawnDart
             }
             else
             {
-                if (rb != null) rb.isKinematic = true;
+                if (rb != null)
+                {
+                    rb.isKinematic = true;
+                    hitGround = true;
+                }
             }
             
         }

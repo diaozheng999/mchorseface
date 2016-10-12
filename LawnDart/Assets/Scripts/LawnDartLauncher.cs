@@ -81,11 +81,15 @@ namespace McHorseface.LawnDart
         bool isLaunching = false;
         void LaunchDart(object p)
         {
-            StartCoroutine(_LaunchDart(p));
+            if(!isLaunching)
+                StartCoroutine(_LaunchDart(p));
         }
 
         UnityCoroutine _LaunchDart(object packet)
         {
+            isLaunching = true;
+
+
             var Packet = (Tuple<Vector3, Quaternion>)packet;
             enabled = false;
             sprite.SetActive(false);
@@ -108,16 +112,17 @@ namespace McHorseface.LawnDart
             rb.AddTorque(transform.rotation.eulerAngles);
 
             // disable darts
-            eventListeners.Add(EventRegistry.instance.SetTimeout(1f, () =>
-            {
-                enabled = true;
-                sprite.SetActive(true);
-            }));
 
             eventListeners.Add(EventRegistry.instance.SetTimeout(10f, () =>
             {
                 Destroy(dup);
             }));
+
+            yield return new WaitForSeconds(1.5f);
+            isLaunching = false;
+            enabled = true;
+            sprite.SetActive(true);
+
         }
         
 

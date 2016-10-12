@@ -62,9 +62,9 @@ namespace McHorseface.LawnDart
             
         }
 
-        public void Reposition(Vector3 pos)
+        public void Reposition()
         {
-            collapsed.transform.position = pos;
+            collapsed.transform.position = Player.instance.transform.position + Vector3.ProjectOnPlane(3f * (Camera.main.transform.forward + Camera.main.transform.right), Vector3.up);
         }
 
         protected override UnityCoroutine DoWave()
@@ -132,9 +132,9 @@ namespace McHorseface.LawnDart
 
 
             // teleport close to the player if she's too far away
-            if(dist.sqrMagnitude > 100)
+            if(dist.sqrMagnitude > 100 || dist.sqrMagnitude < 0.1)
             {
-                collapsed.transform.position = Camera.main.transform.position + 3f * (Camera.main.transform.forward + Camera.main.transform.right) + 5f * Vector3.up;
+                Reposition();
             }
 
             if (Mathf.Abs(point.x) < xViewRange && Mathf.Abs(point.y) < yViewRange)

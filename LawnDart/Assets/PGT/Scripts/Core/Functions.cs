@@ -6,6 +6,12 @@
     using UnityEngine;
     
     public delegate void Lambda();
+    
+    public static class Function
+    {
+        public static void noop() { }
+        public static T id<T>(T x) { return x; }
+    }
 
     public class Future
     {

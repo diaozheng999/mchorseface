@@ -169,10 +169,12 @@ namespace McHorseface.LawnDart
             var mat = Sprite.GetComponentInChildren<MeshRenderer>().material;
             mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1);
 
+            var delta = Quaternion.FromToRotation(fwd, Vector3.forward);
+
 
             transform.rotation = Quaternion.identity;
 
-            transform.rotation = Quaternion.FromToRotation(Post.transform.forward, fwd);
+            transform.rotation = Quaternion.FromToRotation(delta * Post.transform.forward, Vector3.forward);
 
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         }

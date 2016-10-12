@@ -111,7 +111,7 @@ namespace McHorseface.LawnDart
             yield return new WaitUntil(() => LDController.instance != null && LDController.instance.enableControls);
             waitSlide.SetActive(false);
             var callie = Instantiate(Callie);
-            callie.transform.position = new Vector3(0f, 5f, 4f);
+            callie.transform.position = new Vector3(0f, 0f, 4f);
             gazeSlide.gameObject.SetActive(true);
 
             gazeOffListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_OFF, () =>
@@ -139,6 +139,8 @@ namespace McHorseface.LawnDart
             StartCoroutine(FlipHands());
             EventRegistry.instance.Invoke(CALIB_TRYOUT);
 
+            CalibrationMiiController.instance.Reposition();
+
             trySlide.SetActive(true);
             confirmationSlide.SetActive(false);
             confirmationYes.SetActive(false);
@@ -158,7 +160,7 @@ namespace McHorseface.LawnDart
 
             // whenever a button_4_off is sent, a button_off is also sent
             yield return new WaitForEvent(MiiAnimationController.MII_HIT);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.5f);
 
             doHandFlip = false;
             hand0.SetActive(false);
