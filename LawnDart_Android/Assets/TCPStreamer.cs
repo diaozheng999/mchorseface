@@ -145,6 +145,18 @@ namespace McHorseface.LawnDartController
 
         bool update;
 
+        int CountFingers ()
+        {
+            int counts = 0;
+            foreach (var t in Input.touches)
+            {
+                var pos = t.rawPosition;
+
+                button_indicator.GetComponent<Text>().text = pos.x + " " + pos.y;
+            }
+            return counts;
+        }
+
         void Update()
         {
             var rot = transform.eulerAngles;
@@ -227,7 +239,14 @@ namespace McHorseface.LawnDartController
                 pressed = false;
                 stream.WriteByte(BTN_OFF);
                 buffer[0] = 0x13;
-                stream.Write(buffer, 0, 29);
+                if (udpep != null)
+                {
+                    udpclient.SendTo(buffer, udpep);
+                }
+                else
+                {
+                    stream.Write(buffer, 0, 29);
+                }
                 writes = true;
             }
             if (writes)
