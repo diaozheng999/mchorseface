@@ -10,6 +10,12 @@ namespace McHorseface.LawnDart
 
         public const string CALIB_TRYOUT = "calib_tryout";
 
+
+        [SerializeField]
+        Animator anim;
+        [SerializeField]
+        AnimationController anim2;
+
         [SerializeField]
         Text gazeSlide;
         [SerializeField]
@@ -62,10 +68,6 @@ namespace McHorseface.LawnDart
 
 	    // Use this for initialization
 	    void Start () {
-            cfmYesAnim = confirmationYes.GetComponent<AnimationController>();
-            cfmNoAnim = confirmationNo.GetComponent<AnimationController>();
-            cfmYesOrigin = confirmationYes.transform.position;
-            cfmNoOrigin = confirmationNo.transform.position;
             StartCoroutine(CalibrationStart());
             if (LDController.instance) 
                 LDController.instance.ShowSprite();
@@ -110,6 +112,10 @@ namespace McHorseface.LawnDart
 
             yield return new WaitUntil(() => LDController.instance != null && LDController.instance.enableControls);
             waitSlide.SetActive(false);
+
+            anim.SetTrigger("flip");
+
+
             var callie = Instantiate(Callie);
             callie.transform.position = new Vector3(0f, 0f, 4f);
             gazeSlide.gameObject.SetActive(true);
@@ -125,6 +131,9 @@ namespace McHorseface.LawnDart
             }, true);
 
             yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_START);
+
+            anim.SetTrigger("flip");
+
             continueSound.Play();
             calibrationSlide.SetActive(true);
             gazeSlide.gameObject.SetActive(false);
@@ -133,6 +142,9 @@ namespace McHorseface.LawnDart
             EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_OFF, gazeOffListener);
 
             yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_END);
+
+            anim.SetTrigger("flip");
+
             continueSound.Play();
             trySlide.SetActive(true);
             doHandFlip = true;
@@ -160,6 +172,17 @@ namespace McHorseface.LawnDart
 
             // whenever a button_4_off is sent, a button_off is also sent
             yield return new WaitForEvent(MiiAnimationController.MII_HIT);
+            anim.SetTrigger("hide");
+
+            anim2.RunAnimation(
+                anim2.Lerp(
+                    () => anim2.transform.position,
+                    (Vector3 pos) => anim2.transform.position = pos,
+                    Vector3.Lerp,
+                    Vector3.Distance,
+                    new Vector3(0f, 0f, 14f),
+                    2f, (object p) => { anim.SetTrigger("show"); }));
+
             yield return new WaitForSeconds(1.5f);
 
             doHandFlip = false;
@@ -178,42 +201,7 @@ namespace McHorseface.LawnDart
 
         }
 
-
-        void Scale(GameObject obj, AnimationController anim, Vector3 dest)
-        {
-            anim.RunAnimation(anim.Lerp(
-                () => obj.transform.localScale,
-                (Vector3 vec) => obj.transform.localScale = vec,
-                Vector3.Lerp,
-                (Vector3 vec1, Vector3 vec2) => 10000 * Vector3.SqrMagnitude(vec1 - vec2),
-                dest,
-                1f), true, AnimationController.LOCAL_SCALE);
-        }
-
-
-	
-	    // Update is called once per frame
-	    void Update () {
-            Vector3 rot = LDController.instance.GetCalibratedRotation() * Vector3.forward;
-            
-            if (rot.x  > 0.3 && buttonState != ButtonState.No)
-            {
-                Scale(confirmationNo, cfmNoAnim, 0.007f * Vector3.one);
-                Scale(confirmationYes, cfmYesAnim, 0.005f * Vector3.one); 
-                buttonState = ButtonState.No;
-
-            }else if(rot.x < -0.3 && buttonState != ButtonState.Yes)
-            {
-                Scale(confirmationNo, cfmNoAnim, 0.005f * Vector3.one);
-                Scale(confirmationYes, cfmYesAnim, 0.007f * Vector3.one);
-                buttonState = ButtonState.Yes;
-            }else if(rot.x < 0.3 && rot.x > -0.3 && buttonState != ButtonState.None)
-            {
-                Scale(confirmationNo, cfmNoAnim, 0.005f * Vector3.one);
-                Scale(confirmationYes, cfmYesAnim, 0.005f * Vector3.one);
-                buttonState = ButtonState.None;
-            }
-	    }
+        
     }
 
 }

@@ -152,7 +152,7 @@ namespace McHorseface.LawnDartController
             {
                 var pos = t.rawPosition;
 
-                button_indicator.GetComponent<Text>().text = pos.x + " " + pos.y;
+                button_indicator.GetComponent<Text>().text = pos.x + " " + pos.y + " " + Screen.width + " " + Screen.height;
             }
             return counts;
         }
@@ -255,39 +255,35 @@ namespace McHorseface.LawnDartController
             }
         }
 
+        int prevTouchCount = 0;
+
         void FixedUpdate()
         {
-            button_indicator.GetComponent<Text>().text = "Pressed " + Input.touchCount;
-            // handle buttons
-            if(Input.touchCount > 0 && !pressed)
+            var nTouchCount = Input.touchCount;
+
+            if(nTouchCount > prevTouchCount && !pressed)
             {
                 pressed = true;
                 stream.WriteByte(BTN_ON);
-                button_indicator.SetActive(true);    
+                button_indicator.SetActive(true);
             }
-            if (Input.touchCount > 1 && !pressed2)
+            else if(nTouchCount < prevTouchCount && pressed)
             {
-                pressed2 = true;
-                stream.WriteByte(BTN_2_ON);
-            }
-            if (Input.touchCount > 2 && !pressed3)
-            {
-                pressed3 = true;
-                stream.WriteByte(BTN_3_ON);
-            }
-            if (Input.touchCount > 3 && !pressed4)
-            {
-                pressed4 = true;
-                stream.WriteByte(BTN_4_ON);
+                pressed = false;
+                stream.WriteByte(BTN_OFF);
+                buffer[0] = 0x13;
+                if (udpep != null)
+                {
+                    udpclient.SendTo(buffer, udpep);
+                }
+                else
+                {
+                    stream.Write(buffer, 0, 29);
+                }
+                pressed = false;
             }
 
-            WriteBtnOffBytes();
-
-            if (Input.touchCount == 0 && pressed)
-            {
-                button_indicator.SetActive(false);
-                WriteBtnOffBytes();
-            }
+            prevTouchCount = nTouchCount;
 
             var pos = transform.position;
             var rot = transform.rotation;

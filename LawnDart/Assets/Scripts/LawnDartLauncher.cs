@@ -98,6 +98,7 @@ namespace McHorseface.LawnDart
 
             yield return new WaitForEvent("QSet");
 
+            LDController.instance.Vibrate();
 
             var dup = (GameObject)Instantiate(dart, transform.position, LDController.instance.GetCalibratedRotation(), null);
             

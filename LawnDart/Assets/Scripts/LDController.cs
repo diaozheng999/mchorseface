@@ -205,16 +205,37 @@ namespace McHorseface.LawnDart
             while (!terminated)
             {
 
+                Vector3 accel2 = new Vector3(0, 0, 0);
+                Quaternion rot2 = new Quaternion(0, 0, 0, 0);
                 byte[] buffer = udpClient.Receive(ref ipep);
-                if (buffer[0] == POS_UPDATE)
+
+                switch (buffer[0])
                 {
-                    accel.x = BitConverter.ToSingle(buffer, 1);
-                    accel.y = BitConverter.ToSingle(buffer, 5);
-                    accel.z = BitConverter.ToSingle(buffer, 9);
-                    rot.x = BitConverter.ToSingle(buffer, 13);
-                    rot.y = BitConverter.ToSingle(buffer, 17);
-                    rot.z = BitConverter.ToSingle(buffer, 21);
-                    rot.w = BitConverter.ToSingle(buffer, 25);
+                    case POS_UPDATE:
+                        accel.x = BitConverter.ToSingle(buffer, 1);
+                        accel.y = BitConverter.ToSingle(buffer, 5);
+                        accel.z = BitConverter.ToSingle(buffer, 9);
+                        rot.x = BitConverter.ToSingle(buffer, 13);
+                        rot.y = BitConverter.ToSingle(buffer, 17);
+                        rot.z = BitConverter.ToSingle(buffer, 21);
+                        rot.w = BitConverter.ToSingle(buffer, 25);
+                        break;
+                    case 0x13:
+                        accel2.x = BitConverter.ToSingle(buffer, 1);
+                        accel2.y = BitConverter.ToSingle(buffer, 5);
+                        accel2.z = BitConverter.ToSingle(buffer, 9);
+
+                        rot2.x = BitConverter.ToSingle(buffer, 13);
+                        rot2.y = BitConverter.ToSingle(buffer, 17);
+                        rot2.z = BitConverter.ToSingle(buffer, 21);
+                        rot2.w = BitConverter.ToSingle(buffer, 25);
+                        var info = new Tuple<Vector3, Quaternion>(new Vector3(accel2.x, accel2.y, accel2.z), new Quaternion(rot2.x, rot2.y, rot2.z, rot2.w));
+                        if (enableControls)
+                            UnityExecutionThread.instance.ExecuteInMainThread(() =>
+                            {
+                                EventRegistry.instance.Invoke("FIRE", info);
+                            });
+                        break;
                 }
                 
             }

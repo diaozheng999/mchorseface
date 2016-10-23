@@ -47,7 +47,8 @@ namespace McHorseface.LawnDart
 
         void OnTriggerEnter (Collider other)
         {
-            if (other.gameObject.layer == dartlayer && !other.GetComponent<DartController>().hitGround)
+            var dartController = other.GetComponent<DartController>();
+            if (other.gameObject.layer == dartlayer && dartController!=null && !dartController.hitGround)
             {
                 Debug.Log(other.gameObject.name);
                 if (SceneChange)
