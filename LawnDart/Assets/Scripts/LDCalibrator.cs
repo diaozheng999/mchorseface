@@ -162,7 +162,8 @@ namespace McHorseface.LawnDart
 
             for (int i=0; i < 5; i++)
             {
-                yield return new WaitForEvent(LDController.BUTTON_OFF);
+				yield return new WaitForEvent("FIRE");
+				Debug.Log ("Throws done: " + i);
             }
             continueSound.Play();
             var n_mii = Instantiate(mii);

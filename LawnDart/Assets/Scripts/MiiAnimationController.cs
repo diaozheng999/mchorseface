@@ -26,11 +26,23 @@ namespace McHorseface.LawnDart
         [SerializeField]
         GameObject[] femaleHair;
 
+		[SerializeField]
+		AudioClip hitSound;
+
+		[SerializeField]
+		AudioClip[] woahSound;
+
+		[SerializeField]
+		AudioClip[] utterance;
+
         protected Animator anim;
         string[] waves = { "DoWave0", "DoWave1", "DoWave2" };
 
         [SerializeField]
         protected float waveChance = 0.02f;
+
+		[SerializeField]
+		protected float soundChance = 0.04f;
 
         protected bool doWave = true;
 
@@ -44,6 +56,11 @@ namespace McHorseface.LawnDart
         Collider collapsedCollider;
         
 
+		[SerializeField]
+		float excitement = 1;
+
+		float baseExcitement = 0;
+
         [SerializeField]
         protected float blinkChance = 0.2f;
 
@@ -51,6 +68,10 @@ namespace McHorseface.LawnDart
         protected MeshRenderer head;
 
         public static string MII_HIT = "mii_ouch";
+
+		new protected AudioSource audio;
+
+		int hitListener;
 
 	    // Use this for initialization
 	    void Start () {
@@ -108,22 +129,50 @@ namespace McHorseface.LawnDart
 
             anim = GetComponent<Animator>();
 
-            anim.SetFloat("IdleSpeed", 2 +  (Random.value - 0.5f));
+			baseExcitement = Random.value;
+
 
             StartCoroutine(DoWave());
 
             EventRegistry.instance.AddEventListener("killall", () => Fragment(Vector3.zero), false);
+
+			audio = GetComponent<AudioSource> ();
+			audio.pitch += Random.value - 0.5f;
+
+			hitListener = EventRegistry.instance.AddEventListener ("FIRE", () => {
+				var accel = LDController.instance.Accel.sqrMagnitude / 10;
+				this.SetTimeout(Random.value / 10f, () => {
+					excitement += accel * (1+Random.value / 10);
+
+					var woah_id = Mathf.FloorToInt(Random.value * woahSound.Length);
+					audio.clip = woahSound[woah_id];
+
+					audio.Play();
+				});
+			}, true);
 	    }
 	
         protected virtual UnityCoroutine DoWave ()
         {
             yield return new WaitForEndOfFrame();
-            while (doWave)
+            while (doWave && alive)
             {
+				bool playSound = false;
                 if (Random.value < waveChance)
                 {
                     anim.SetTrigger(waves[Mathf.FloorToInt(Random.value * 3)]);
+					playSound = true;
                 }
+
+
+				if (playSound || (Random.value < soundChance && !audio.isPlaying))
+				{
+					
+					var sound_id = Mathf.FloorToInt (Random.value * utterance.Length);
+					audio.clip = utterance[sound_id];
+					audio.Play ();
+				}
+
                 yield return new WaitForSeconds(Random.value);
             }
 
@@ -134,6 +183,10 @@ namespace McHorseface.LawnDart
         {
             if (!alive) return;
             alive = false;
+
+			audio.clip = hitSound;
+			audio.Play ();
+			EventRegistry.instance.RemoveEventListener ("FIRE", hitListener);
             EventRegistry.instance.Invoke(MII_HIT);
             anim.Stop();
             collapsed.isKinematic = true;
@@ -150,10 +203,17 @@ namespace McHorseface.LawnDart
 
             this.SetTimeout(10f, () =>
             {
+				
                 Destroy(collapsed.gameObject);
             });
         }
         
+
+		void Update(){
+			anim.SetFloat("IdleSpeed", 2 +  (excitement - 0.5f));
+			audio.volume = excitement / 2;
+			excitement = Mathf.Lerp (excitement, baseExcitement, Time.deltaTime);
+		}
 
         void OnEnable()
         {
@@ -163,6 +223,10 @@ namespace McHorseface.LawnDart
                 StartCoroutine(DoWave());
             }
         }
+
+		void OnDestroy(){
+			EventRegistry.instance.RemoveEventListener ("FIRE", hitListener);
+		}
     }
 }
 

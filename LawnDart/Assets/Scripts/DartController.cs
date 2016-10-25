@@ -32,15 +32,16 @@ namespace McHorseface.LawnDart
 
             if (hit != null) hit.Play();
 
-            if (other.CompareTag(MII))
-            {
-                other.GetComponentInChildren<MiiAnimationController>().Fragment(transform.position);
+			if (other.CompareTag (MII)) {
+				other.GetComponentInChildren<MiiAnimationController> ().Fragment (transform.position);
                 
-                Instantiate(blood, other.transform.position + 1f * Vector3.up + 0.3f *(transform.position - Camera.main.transform.forward).normalized, Quaternion.identity, null);
+				Instantiate (blood, other.transform.position + 1f * Vector3.up + 0.3f * (transform.position - Camera.main.transform.forward).normalized, Quaternion.identity, null);
 
-                Destroy(rb.gameObject);
+				Destroy (rb.gameObject);
                 
-            }
+			} else if (other.CompareTag ("Player")) {
+				Destroy (rb.gameObject);
+			}
             else if (rb != null)
             {
                 if (other.CompareTag("WarpTarget"))
