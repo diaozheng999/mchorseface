@@ -17,6 +17,9 @@ namespace McHorseface.LawnDart
         [SerializeField]
         bool imperial = false;
 
+        [SerializeField]
+        bool scales = true;
+
         const float M_TO_FT = 0.3048f;
 
         // Use this for initialization
@@ -46,7 +49,7 @@ namespace McHorseface.LawnDart
 
             distanceIndicator.text = distStr;
 
-            transform.localScale = scaleFactor * dist * Vector3.one;
+            if(scales) transform.localScale = scaleFactor * dist * Vector3.one;
         }
     }
 }

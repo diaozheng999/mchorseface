@@ -33,9 +33,12 @@ namespace McHorseface.LawnDart
             if (hit != null) hit.Play();
 
 			if (other.CompareTag (MII)) {
-				other.GetComponentInChildren<MiiAnimationController> ().Fragment (transform.position);
+                var mii = other.GetComponentInChildren<MiiAnimationController>();
                 
-				Instantiate (blood, other.transform.position + 1f * Vector3.up + 0.3f * (transform.position - Camera.main.transform.forward).normalized, Quaternion.identity, null);
+                mii.Fragment (transform.position);
+                
+                if(mii.doBlood)
+				    Instantiate (blood, other.transform.position + 1f * Vector3.up + 0.3f * (transform.position - Camera.main.transform.forward).normalized, Quaternion.identity, null);
 
 				Destroy (rb.gameObject);
                 

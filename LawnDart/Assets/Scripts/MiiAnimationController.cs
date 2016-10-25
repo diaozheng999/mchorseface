@@ -11,6 +11,8 @@ namespace McHorseface.LawnDart
     }
     public class MiiAnimationController : MonoBehaviour {
 
+        public bool doBlood = true;
+
         [SerializeField]
         MiiGender gender = MiiGender.Random;
 
@@ -71,7 +73,9 @@ namespace McHorseface.LawnDart
 
 		new protected AudioSource audio;
 
-		int hitListener;
+        int woah_id = 0;
+
+        int hitListener;
 
 	    // Use this for initialization
 	    void Start () {
@@ -144,13 +148,15 @@ namespace McHorseface.LawnDart
 				this.SetTimeout(Random.value / 10f, () => {
 					excitement += accel * (1+Random.value / 10);
 
-					var woah_id = Mathf.FloorToInt(Random.value * woahSound.Length);
+					
 					audio.clip = woahSound[woah_id];
 
 					audio.Play();
 				});
 			}, true);
-	    }
+
+            woah_id = Mathf.FloorToInt(Random.value * woahSound.Length);
+        }
 	
         protected virtual UnityCoroutine DoWave ()
         {

@@ -11,7 +11,7 @@ namespace McHorseface.LawnDart
 
         void Start()
         {
-            // do nothing;
+            doBlood = false;
         }
 
         void Update()
@@ -19,9 +19,10 @@ namespace McHorseface.LawnDart
 
         }
 
-        void Fragment()
+        public override void Fragment(Vector3 position)
         {
-            EventRegistry.instance.Invoke(MiiAnimationController.MII_HIT);
+            EventRegistry.instance.Invoke(MII_HIT);
+            EventRegistry.instance.Invoke("pacifist");
             Destroy(go);
         }
     }

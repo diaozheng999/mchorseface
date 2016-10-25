@@ -63,6 +63,11 @@ namespace McHorseface.LawnDart
                 }
 
                 gameObject.SetActive(false);
+
+                if (dartController.hitWarpTarget)
+                {
+                    dartController.hitWarpTarget = false;
+                }
             }
         }
 

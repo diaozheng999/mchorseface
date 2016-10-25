@@ -16,6 +16,11 @@ public class LoadGame : MonoBehaviour {
 
     public void loadGame()
     {
+        SceneManager.LoadScene("Level1");
+    }
+
+    public void loadGame2()
+    {
         SceneManager.LoadScene("GameScene");
     }
 }

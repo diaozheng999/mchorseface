@@ -104,6 +104,8 @@ namespace McHorseface.LawnDart
                 yield return new WaitForEvent(LawnDartLauncher.DART_LAUNCH);
                 misses++;
 
+                Debug.Log("CountMisses: "+ misses + " miss(es).");
+
                 if(misses > 20)
                 {
                     Instantiate(Pacifist, new Vector3(3f, 1f, 4f), Quaternion.identity, null);
@@ -111,6 +113,7 @@ namespace McHorseface.LawnDart
                 }
                 
             }
+            Debug.Log("CountMisses: done");
         }
 
 

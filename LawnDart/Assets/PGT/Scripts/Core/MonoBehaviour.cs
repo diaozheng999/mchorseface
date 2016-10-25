@@ -2,7 +2,7 @@
 using PGT.Core.Func;
 namespace PGT.Core
 {
-    class Behaviour : SyncMonoBehaviour
+    public class Behaviour : SyncMonoBehaviour
     {
         List<Tuple<string, int>> registeredEventListeners = null;
         
@@ -30,6 +30,36 @@ namespace PGT.Core
                 _handler = (object state) =>
                 {
                     if (enabled) handler((T)state);
+                };
+            }
+
+
+            var p = new Tuple<string, int>(
+                evt, EventRegistry.instance.AddEventListener(evt, _handler, persistent)
+            );
+
+            registeredEventListeners.Add(p);
+        }
+
+        protected void AddEventListener(string evt, Lambda handler, bool persistent = false, bool exec_when_disabled = false)
+        {
+            InitRegisteredEvents();
+
+
+            System.Action<object> _handler;
+
+            if (exec_when_disabled)
+            {
+                _handler = (object state) =>
+                {
+                    handler();
+                };
+            }
+            else
+            {
+                _handler = (object state) =>
+                {
+                    if (enabled) handler();
                 };
             }
 
