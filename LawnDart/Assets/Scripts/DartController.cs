@@ -18,6 +18,7 @@ namespace McHorseface.LawnDart
 
         public bool isTryout = true;
         public bool hitGround = false;
+        public bool hitWarpTarget = false;
 
         AudioSource hit;
 
@@ -40,13 +41,14 @@ namespace McHorseface.LawnDart
                 Destroy(rb.gameObject);
                 
             }
-            else
+            else if (rb != null)
             {
-                if (rb != null)
+                if (other.CompareTag("WarpTarget"))
                 {
-                    rb.isKinematic = true;
-                    hitGround = true;
+                    hitWarpTarget = true;
                 }
+                rb.isKinematic = true;
+                hitGround = true;   
             }
             
         }

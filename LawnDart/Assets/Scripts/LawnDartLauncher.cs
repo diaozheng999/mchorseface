@@ -94,9 +94,9 @@ namespace McHorseface.LawnDart
             enabled = false;
             sprite.SetActive(false);
 
-            LDController.instance.SetOrientationForce(Packet.cdr);
+            //LDController.instance.SetOrientationForce(Packet.cdr);
 
-            yield return new WaitForEvent("QSet");
+            //yield return new WaitForEvent("QSet");
 
             LDController.instance.Vibrate();
 
