@@ -147,7 +147,7 @@ namespace McHorseface.LawnDart
                     Debug.Log("Callie: Gaze on");
                     isCalibrating = true;
                     
-                    if(LDController.instance.enableControls)
+					if(LDController.instance.enableControls && calibration_state <= 0)
                         StartCoroutine(CalibrationSequence());
                 }
             }
@@ -168,6 +168,8 @@ namespace McHorseface.LawnDart
 
 
         int current_try = -1;
+
+
 
         UnityCoroutine CalibrationSequence()
         {
