@@ -160,7 +160,7 @@ namespace McHorseface.LawnDart
                 {
                     Debug.Log("Callie: Gaze off");
                     EventRegistry.instance.Invoke(GAZE_OFF);
-                    calibration_state = 0;
+                    calibration_state = -1;
                     isCalibrating = false;
                 }
             }
