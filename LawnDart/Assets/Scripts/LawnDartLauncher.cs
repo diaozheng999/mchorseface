@@ -93,11 +93,7 @@ namespace McHorseface.LawnDart
             var Packet = (Tuple<Vector3, Quaternion>)packet;
             enabled = false;
             sprite.SetActive(false);
-
-            //LDController.instance.SetOrientationForce(Packet.cdr);
-
-            //yield return new WaitForEvent("QSet");
-
+            
             LDController.instance.Vibrate();
 
             var dup = (GameObject)Instantiate(dart, transform.position, LDController.instance.GetCalibratedRotation(), null);

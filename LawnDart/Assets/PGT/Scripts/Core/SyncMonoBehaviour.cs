@@ -3,14 +3,11 @@
     using UnityEngine;
     using Func;
 
-    public class SyncMonoBehaviour : MonoBehaviour
+    public class SyncMonoBehaviour : UnityEngine.MonoBehaviour
     {
-        public new Transform transform
+        public Transform GetTransform()
         {
-            get
-            {
-                return new Future<Transform>(() => base.transform).bind();
-            }
+            return new Future<Transform>(() => base.transform).bind();
         }
 
         public Future<Vector3> GetPosition()
