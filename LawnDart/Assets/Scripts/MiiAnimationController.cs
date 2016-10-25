@@ -139,7 +139,7 @@ namespace McHorseface.LawnDart
 			audio = GetComponent<AudioSource> ();
 			audio.pitch += Random.value - 0.5f;
 
-			hitListener = EventRegistry.instance.AddEventListener ("FIRE", () => {
+			hitListener = EventRegistry.instance.AddEventListener (LawnDartLauncher.DART_LAUNCH, () => {
 				var accel = LDController.instance.Accel.sqrMagnitude / 10;
 				this.SetTimeout(Random.value / 10f, () => {
 					excitement += accel * (1+Random.value / 10);
@@ -186,7 +186,7 @@ namespace McHorseface.LawnDart
 
 			audio.clip = hitSound;
 			audio.Play ();
-			EventRegistry.instance.RemoveEventListener ("FIRE", hitListener);
+			EventRegistry.instance.RemoveEventListener (LawnDartLauncher.DART_LAUNCH, hitListener);
             EventRegistry.instance.Invoke(MII_HIT);
             anim.Stop();
             collapsed.isKinematic = true;
@@ -225,7 +225,7 @@ namespace McHorseface.LawnDart
         }
 
 		void OnDestroy(){
-			EventRegistry.instance.RemoveEventListener ("FIRE", hitListener);
+			EventRegistry.instance.RemoveEventListener (LawnDartLauncher.DART_LAUNCH, hitListener);
 		}
     }
 }

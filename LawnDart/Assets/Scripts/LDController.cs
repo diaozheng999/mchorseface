@@ -80,6 +80,7 @@ namespace McHorseface.LawnDart
         Vector3 accel;
 
         Quaternion calibratedRotation;
+        Quaternion driftRotation;
         string ipaddr;
 
         bool quatblocked = false;
@@ -97,6 +98,7 @@ namespace McHorseface.LawnDart
         }
 
         bool terminated = false;
+        bool drifting = false;
         byte[] buffer;
         void Start()
         {
@@ -119,6 +121,7 @@ namespace McHorseface.LawnDart
                 Sprite.SetActive(false);
             }, true);
             
+            driftRotation = Quaternion.Euler(new Vector3(0, -1f, 0));
         }
 
         public void ShowSprite()
@@ -177,6 +180,27 @@ namespace McHorseface.LawnDart
             transform.rotation = Quaternion.FromToRotation(delta * Post.transform.forward, Vector3.forward);
 
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+        }
+
+
+        public void StartDrift()
+        {
+            drifting = true;
+            StartCoroutine(Drift());
+        }
+
+        UnityCoroutine Drift()
+        {
+            while (drifting)
+            {
+                transform.rotation = driftRotation * transform.rotation;
+                yield return new WaitForSeconds(0.01f);
+            }
+        }
+
+        public void StopDrift()
+        {
+            drifting = false;
         }
 
         public void Vibrate()

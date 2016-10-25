@@ -25,6 +25,7 @@ namespace McHorseface.LawnDart
 
         List<Tuple<string, int>> eventListeners;
 
+        public const string DART_LAUNCH = "dart_launch";
 
         int launch_event_listener;
         void Start()
@@ -107,6 +108,8 @@ namespace McHorseface.LawnDart
 
             rb.AddRelativeForce(scaleFactor * Vector3.Magnitude(Packet.car - gravity) * Vector3.forward, ForceMode.VelocityChange);
             rb.AddTorque(transform.rotation.eulerAngles);
+
+            EventRegistry.instance.Invoke(DART_LAUNCH);
 
             // disable darts
 

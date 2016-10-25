@@ -84,7 +84,7 @@ namespace McHorseface.LawnDart
 
         public void Reposition()
         {
-            collapsed.transform.position = Player.instance.transform.position + Vector3.ProjectOnPlane(3f * (Camera.main.transform.forward + Camera.main.transform.right), Vector3.up);
+            collapsed.transform.position = Player.instance.transform.position + Vector3.ProjectOnPlane(3f * (-.2f * Camera.main.transform.forward + Camera.main.transform.right), Vector3.up);
         }
 
         protected override UnityCoroutine DoWave()
@@ -201,14 +201,18 @@ namespace McHorseface.LawnDart
                 {
                     case 0:
                         
-                        calibration_state = 1;
                         Debug.Log("Callie: Sending vibration sequence.");
 
                         LDController.instance.Vibrate();
                         yield return new WaitForSeconds(0.6f);
                         LDController.instance.Vibrate();
                         yield return new WaitForEndOfFrame();
+                        calibration_state = 6;
+                        continue;
 
+                    case 6:
+
+                        calibration_state = 1;
                         InitPrompt.SetBool("display", true);
                         CalibrationPrompt.SetBool("display", false);
                         KeepStillPrompt.SetBool("display", false);
@@ -217,7 +221,9 @@ namespace McHorseface.LawnDart
                         _v.x = 0f;
                         ProgressBar.sizeDelta = _v;
 
+                        start_time = 0f;
                         Debug.Log("Callie: switching states.");
+                        yield return new WaitForSeconds(0.25f); // wait for animation to complete
                         continue;
                     case 1:
 
@@ -225,18 +231,33 @@ namespace McHorseface.LawnDart
 
                         var vert_angle = rot.z % 360f;
 
-                        if(vert_angle > 0 && vert_angle < 90)
-                        {
-                            calibrationSound.Play();
-                            calibration_state = 4;
-                            current_try = iter;
-                            start_time = 0f;
 
-                            InitPrompt.SetBool("display", false);
-                            CalibrationPrompt.SetBool("display", true);
-                            ProgressBg.SetActive(true);
+                        
+
+                        if(vert_angle > 0 && vert_angle < 90 || LDController.instance.Accel.sqrMagnitude > 1.2f || LDController.instance.Accel.sqrMagnitude < 0.8f)
+                        {
+
+                            if(start_time > 0.25f)
+                            {
+                                calibrationSound.Play();
+                                calibration_state = 4;
+                                current_try = iter;
+                                start_time = 0f;
+
+                                InitPrompt.SetBool("display", false);
+                                CalibrationPrompt.SetBool("display", true);
+                                KeepStillPrompt.SetBool("display", false);
+                                ProgressBg.SetActive(true);
                             
-                            EventRegistry.instance.Invoke(CALIB_SEQ_START);
+                                EventRegistry.instance.Invoke(CALIB_SEQ_START);
+                                yield return new WaitForSeconds(0.25f); // wait for animation to complete
+                            }else
+                            {
+                                start_time += Time.deltaTime;
+                            }
+                        }else
+                        {
+                            start_time = 0f;
                         }
                         yield return new WaitForEndOfFrame();
                         continue;
@@ -260,6 +281,7 @@ namespace McHorseface.LawnDart
                             calibrationSound.Stop();
 
                             CalibrationPrompt.SetBool("display", false);
+                            yield return new WaitForSeconds(0.2f);
                             ProgressBg.SetActive(false);
                             var _x = ProgressBar.sizeDelta;
                             _x.x = 0f;
@@ -269,6 +291,9 @@ namespace McHorseface.LawnDart
                             KeepStillPrompt.SetBool("display", false);
                             yield return new WaitForSeconds(0.2f);
                             current_try = -1;
+
+                            start_time = 0f;
+                            calibration_state = 6;
                             continue;
                         }else
                         {
@@ -306,6 +331,7 @@ namespace McHorseface.LawnDart
             isCalibrating = false;
             anim.SetBool("LineOfSight", false);
             InitPrompt.SetBool("display", false);
+            CalibrationPrompt.gameObject.SetActive(true);
             CalibrationPrompt.SetBool("display", false);
             KeepStillPrompt.SetBool("display", false);
             ProgressBg.SetActive(false);

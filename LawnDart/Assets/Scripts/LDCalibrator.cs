@@ -31,6 +31,8 @@ namespace McHorseface.LawnDart
         [SerializeField]
         GameObject trySlide;
         [SerializeField]
+        GameObject driftSlide;
+        [SerializeField]
         GameObject[] finalSlide;
         [SerializeField]
         GameObject mii;
@@ -45,7 +47,11 @@ namespace McHorseface.LawnDart
         [SerializeField]
         GameObject Callie;
 
+        [SerializeField]
+        GameObject Pacifist;
+
         bool doHandFlip = false;
+        bool doCountMisses = false;
 
         [SerializeField]
         AudioSource continueSound;
@@ -89,6 +95,23 @@ namespace McHorseface.LawnDart
             hand1.SetActive(false);
         }
         
+        UnityCoroutine CountMisses()
+        {
+            doCountMisses = true;
+            var misses = 0;
+            while (doCountMisses)
+            {
+                yield return new WaitForEvent(LawnDartLauncher.DART_LAUNCH);
+                misses++;
+
+                if(misses > 20)
+                {
+                    Instantiate(Pacifist, new Vector3(3f, 1f, 4f), Quaternion.identity, null);
+                    doCountMisses = false;
+                }
+                
+            }
+        }
 
 
         UnityCoroutine CalibrationStart()
@@ -104,6 +127,7 @@ namespace McHorseface.LawnDart
             foreach (var s in finalSlide) s.SetActive(false);
             hand0.SetActive(false);
             hand1.SetActive(false);
+            driftSlide.SetActive(false);
             gazeSlide.gameObject.SetActive(false);
             doHandFlip = false;
             enabled = false;
@@ -117,7 +141,7 @@ namespace McHorseface.LawnDart
 
 
             var callie = Instantiate(Callie);
-            callie.transform.position = new Vector3(0f, 0f, 4f);
+            callie.transform.position = new Vector3(1f, 0f, 4f);
             gazeSlide.gameObject.SetActive(true);
 
             gazeOffListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_OFF, () =>
@@ -162,17 +186,36 @@ namespace McHorseface.LawnDart
 
             for (int i=0; i < 5; i++)
             {
-				yield return new WaitForEvent("FIRE");
+				yield return new WaitForEvent(LawnDartLauncher.DART_LAUNCH);
 				Debug.Log ("Throws done: " + i);
             }
             continueSound.Play();
             var n_mii = Instantiate(mii);
             n_mii.transform.position = new Vector3(0, 1, 4);
+            StartCoroutine(CountMisses());
+
+            bool mii_hit = false;
+
+            driftSlide.SetActive(true);
+            doHandFlip = false;
+            hand0.SetActive(false);
+            hand1.SetActive(false);
+            trySlide.SetActive(false);
+            anim.SetTrigger("flip");
+            //apply an arbitrary rotation to to force calibration
+            LDController.instance.StartDrift();
+            yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_END);
+            LDController.instance.StopDrift();
 
 
 
+            EventRegistry.instance.AddEventListener(MiiAnimationController.MII_HIT, () => mii_hit = true);
             // whenever a button_4_off is sent, a button_off is also sent
-            yield return new WaitForEvent(MiiAnimationController.MII_HIT);
+            if (!mii_hit)
+            {
+                yield return new WaitForEvent(MiiAnimationController.MII_HIT);
+            }
+            doCountMisses = false;
             anim.SetTrigger("hide");
 
             anim2.RunAnimation(
@@ -189,7 +232,7 @@ namespace McHorseface.LawnDart
             doHandFlip = false;
             hand0.SetActive(false);
             hand1.SetActive(false);
-
+            driftSlide.SetActive(false);
             trySlide.SetActive(false);
             continueSound.Play();
 
