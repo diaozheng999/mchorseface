@@ -23,6 +23,9 @@ namespace McHorseface.LawnDart
         [SerializeField]
         Material teleportTexture;
 
+        [SerializeField]
+        GameObject loadingIndicator;
+
         int dartlayer = -1;
 
         int targetListener;
@@ -34,7 +37,9 @@ namespace McHorseface.LawnDart
             
             foreach (var m in GetComponentsInChildren<MeshRenderer>())
             {
-                m.material = SceneChange ? sceneChangeTexture : teleportTexture;
+                if (m.GetComponent<TextMesh>()==null){
+                    m.material = SceneChange ? sceneChangeTexture : teleportTexture;
+                }
             }
             instance = ++_instance;
             targetListener = EventRegistry.instance.AddEventListener(WARP,
@@ -46,6 +51,7 @@ namespace McHorseface.LawnDart
                     }
                 }, true);
 			loading = false;
+            loadingIndicator.SetActive(false);
         }
 
 		//128.237.215.182
@@ -58,26 +64,27 @@ namespace McHorseface.LawnDart
 			if (dartController != null) {
 				Debug.Log ("target: dartTriggerEnter:" + dartController.dartTriggerEnter + ", targetTriggerEnter:" + dartController.targetTriggerEnter);
 			}	
-            if (other.gameObject.layer == dartlayer && dartController!=null && (
-				(dartController.dartTriggerEnter && !dartController.targetTriggerEnter) ||
-				(dartController.targetTriggerEnter && !dartController.dartTriggerEnter)
-			))
+            if (other.gameObject.layer == dartlayer && dartController!=null &&  !dartController.targetTriggerEnter)
             {
                 Debug.Log(other.gameObject.name);
                 if (SceneChange)
                 {
 					Player.instance.Teleport(transform.position);
-					if(!loading)
-                    	SceneManager.LoadSceneAsync(NextScene);
+                    if (!loading)
+                    {
+                    	var p = SceneManager.LoadSceneAsync(NextScene);
+                        //p.allowSceneActivation = false;
+                        loadingIndicator.SetActive(true);
+                    }
 					GetComponent<Collider> ().enabled = false;
 					loading = true;
                 }else
                 {
                     Player.instance.Teleport(transform.position);
                     EventRegistry.instance.Invoke(WARP, instance);
+                    gameObject.SetActive(false);
                 }
 
-                gameObject.SetActive(false);
 
 
 				dartController.targetTriggerEnter = true;

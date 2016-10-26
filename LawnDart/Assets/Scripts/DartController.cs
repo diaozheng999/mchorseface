@@ -37,6 +37,7 @@ namespace McHorseface.LawnDart
 			Debug.Log ("DartController: dartTriggerEnter:" + dartTriggerEnter + ", targetTriggerEnter:" + targetTriggerEnter);
             if (hit != null) hit.Play();
 
+            
 			if (other.CompareTag (MII)) {
                 var mii = other.GetComponentInChildren<MiiAnimationController>();
                 
@@ -50,6 +51,12 @@ namespace McHorseface.LawnDart
 			} else if (other.CompareTag ("Player")) {
 				Destroy (rb.gameObject);
 			}
+
+            else if (other.GetComponent<PhaseBoard>() != null)
+            {
+                return;
+            }
+
             else if (rb != null)
             {
 				rb.isKinematic = true;
