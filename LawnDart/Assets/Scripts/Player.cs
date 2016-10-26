@@ -46,6 +46,8 @@ namespace McHorseface.LawnDart
 
         public void Teleport(Vector3 pos)
         {
+			if (WarpTarget.loading)
+				return;
             Debug.Log("Player: Teleporting");
             tp_dest.Enqueue(pos);
             StartCoroutine(teleport());

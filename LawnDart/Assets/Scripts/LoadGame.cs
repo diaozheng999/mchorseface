@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using PGT.Core;
 
 public class LoadGame : MonoBehaviour {
 
@@ -23,4 +24,13 @@ public class LoadGame : MonoBehaviour {
     {
         SceneManager.LoadScene("GameScene");
     }
+
+	public void loadGame3(){
+		SceneManager.LoadScene ("PortalTest");
+	}
+
+
+	public void KILLL(){
+		EventRegistry.instance.Invoke ("killall");
+	}
 }

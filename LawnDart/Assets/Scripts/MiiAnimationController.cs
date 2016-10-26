@@ -77,6 +77,8 @@ namespace McHorseface.LawnDart
 
         int hitListener;
 
+		int scaredListener;
+
 	    // Use this for initialization
 	    void Start () {
             //disable all body and hair types
@@ -155,7 +157,15 @@ namespace McHorseface.LawnDart
 				});
 			}, true);
 
+			scaredListener = EventRegistry.instance.AddEventListener (MII_HIT, () => {
+				this.SetTimeout(Random.value / 10f, () => {	
+					audio.clip = hitSound;	
+					audio.Play();
+				});
+			}, true);
+
             woah_id = Mathf.FloorToInt(Random.value * woahSound.Length);
+
         }
 	
         protected virtual UnityCoroutine DoWave ()

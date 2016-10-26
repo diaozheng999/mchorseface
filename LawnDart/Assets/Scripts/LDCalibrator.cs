@@ -43,6 +43,12 @@ namespace McHorseface.LawnDart
         GameObject hand0;
         [SerializeField]
         GameObject hand1;
+		[SerializeField]
+		GameObject hand2;
+		[SerializeField]
+		GameObject hand3;
+		[SerializeField]
+		GameObject hand4;
 
         [SerializeField]
         GameObject Callie;
@@ -82,17 +88,23 @@ namespace McHorseface.LawnDart
         UnityCoroutine FlipHands()
         {
             doHandFlip = true;
-            bool slide2 = true;
+			int current = 0;
             while (doHandFlip)
             {
-                hand0.SetActive(slide2);
-                hand1.SetActive(!slide2);
-                slide2 = !slide2;
-                yield return new WaitForSeconds(0.7f);
+				hand0.SetActive(current == 0);
+				hand1.SetActive(current == 1);
+				hand2.SetActive (current == 2);
+				hand3.SetActive (current == 3);
+				hand4.SetActive (current == 4);
+				current = (current + 1) % 5;
+                yield return new WaitForSeconds(current == 0 ? 0.7f : 0.3f);
             }
 
             hand0.SetActive(false);
             hand1.SetActive(false);
+			hand2.SetActive(false);
+			hand3.SetActive(false);
+			hand4.SetActive(false);
         }
         
         UnityCoroutine CountMisses()
@@ -130,6 +142,9 @@ namespace McHorseface.LawnDart
             foreach (var s in finalSlide) s.SetActive(false);
             hand0.SetActive(false);
             hand1.SetActive(false);
+			hand2.SetActive(false);
+			hand3.SetActive(false);
+			hand4.SetActive(false);
             driftSlide.SetActive(false);
             gazeSlide.gameObject.SetActive(false);
             doHandFlip = false;
@@ -203,8 +218,12 @@ namespace McHorseface.LawnDart
             doHandFlip = false;
             hand0.SetActive(false);
             hand1.SetActive(false);
+			hand2.SetActive(false);
+			hand3.SetActive(false);
+			hand4.SetActive(false);
             trySlide.SetActive(false);
             anim.SetTrigger("flip");
+			EventRegistry.instance.AddEventListener(MiiAnimationController.MII_HIT, () => mii_hit = true);
             //apply an arbitrary rotation to to force calibration
             LDController.instance.StartDrift();
             yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_END);
@@ -212,7 +231,6 @@ namespace McHorseface.LawnDart
 
 
 
-            EventRegistry.instance.AddEventListener(MiiAnimationController.MII_HIT, () => mii_hit = true);
             // whenever a button_4_off is sent, a button_off is also sent
             if (!mii_hit)
             {
@@ -235,6 +253,9 @@ namespace McHorseface.LawnDart
             doHandFlip = false;
             hand0.SetActive(false);
             hand1.SetActive(false);
+			hand2.SetActive(false);
+			hand3.SetActive(false);
+			hand4.SetActive(false);
             driftSlide.SetActive(false);
             trySlide.SetActive(false);
             continueSound.Play();

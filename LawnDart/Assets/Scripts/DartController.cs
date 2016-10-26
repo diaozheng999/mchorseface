@@ -17,8 +17,12 @@ namespace McHorseface.LawnDart
         const string MII = "Mii";
 
         public bool isTryout = true;
-        public bool hitGround = false;
-        public bool hitWarpTarget = false;
+        
+
+		public bool targetTriggerEnter = false;
+		public bool dartTriggerEnter = false;
+
+
 
         AudioSource hit;
 
@@ -29,7 +33,8 @@ namespace McHorseface.LawnDart
 
         void OnTriggerEnter(Collider other)
         {
-
+			Debug.Log ("DartController: Collided!");
+			Debug.Log ("DartController: dartTriggerEnter:" + dartTriggerEnter + ", targetTriggerEnter:" + targetTriggerEnter);
             if (hit != null) hit.Play();
 
 			if (other.CompareTag (MII)) {
@@ -47,12 +52,11 @@ namespace McHorseface.LawnDart
 			}
             else if (rb != null)
             {
+				rb.isKinematic = true;
                 if (other.CompareTag("WarpTarget"))
                 {
-                    hitWarpTarget = true;
+					dartTriggerEnter = true;
                 }
-                rb.isKinematic = true;
-                hitGround = true;   
             }
             
         }
