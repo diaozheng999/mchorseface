@@ -153,6 +153,12 @@ namespace McHorseface.LawnDartController
                 var pos = t.rawPosition;
 
                 button_indicator.GetComponent<Text>().text = pos.x + " " + pos.y + " " + Screen.width + " " + Screen.height;
+
+                if (pos.y > 50 && pos.y < Screen.height - 50)
+                {
+                    counts++;
+                }
+
             }
             return counts;
         }
@@ -259,9 +265,10 @@ namespace McHorseface.LawnDartController
 
         void FixedUpdate()
         {
-            var nTouchCount = Input.touchCount;
+            
+            var nTouchCount = CountFingers();
 
-            if(nTouchCount > prevTouchCount && !pressed)
+            if (nTouchCount > prevTouchCount && !pressed)
             {
                 pressed = true;
                 stream.WriteByte(BTN_ON);
