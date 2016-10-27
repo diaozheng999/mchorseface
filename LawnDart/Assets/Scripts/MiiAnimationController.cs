@@ -147,12 +147,7 @@ namespace McHorseface.LawnDart
 			hitListener = EventRegistry.instance.AddEventListener (LawnDartLauncher.DART_LAUNCH, () => {
 				var accel = LDController.instance.Accel.sqrMagnitude / 10;
 				this.SetTimeout(Random.value / 10f, () => {
-					excitement += accel * (1+Random.value / 10);
-
-					
-					audio.clip = woahSound[woah_id];
-
-					audio.Play();
+                    StartCoroutine(DoWoah(accel));
 				});
 			}, true);
 
@@ -165,6 +160,20 @@ namespace McHorseface.LawnDart
 
             woah_id = Mathf.FloorToInt(Random.value * woahSound.Length);
 
+        }
+
+        protected UnityCoroutine DoWoah(float accel)
+        {
+            if (audio.isPlaying) yield break;
+
+            excitement += accel * (1 + Random.value / 10);
+
+
+            audio.clip = woahSound[woah_id];
+            audio.Play();
+            anim.SetBool("doOo", true);
+            yield return new WaitWhile(() => audio.isPlaying);
+            anim.SetBool("doOo", false);
         }
 	
         protected virtual UnityCoroutine DoWave ()
@@ -182,10 +191,19 @@ namespace McHorseface.LawnDart
 
 				if (playSound || (Random.value < soundChance && !audio.isPlaying))
 				{
-					
-					var sound_id = Mathf.FloorToInt (Random.value * utterance.Length);
-					audio.clip = utterance[sound_id];
+
+                    var sound_id = Mathf.FloorToInt(Random.value * utterance.Length);
+                    
+
+                    audio.clip = utterance[sound_id];
+
+
+
 					audio.Play ();
+                    anim.SetInteger("lipsync", sound_id + 1);
+                    anim.SetTrigger("startSpeaking");
+                    yield return new WaitWhile(() => audio.isPlaying);
+                    anim.SetInteger("lipsync", 0);
 				}
 
                 yield return new WaitForSeconds(Random.value);
