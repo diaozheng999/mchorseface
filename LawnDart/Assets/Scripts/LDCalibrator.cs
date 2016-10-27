@@ -35,6 +35,8 @@ namespace McHorseface.LawnDart
         [SerializeField]
         GameObject[] finalSlide;
         [SerializeField]
+        Text killSlide;
+        [SerializeField]
         GameObject mii;
         [SerializeField]
         GameObject[] warp;
@@ -146,6 +148,7 @@ namespace McHorseface.LawnDart
 			hand3.SetActive(false);
 			hand4.SetActive(false);
             driftSlide.SetActive(false);
+            killSlide.gameObject.SetActive(false);
             gazeSlide.gameObject.SetActive(false);
             doHandFlip = false;
             enabled = false;
@@ -207,12 +210,9 @@ namespace McHorseface.LawnDart
 				yield return new WaitForEvent(LawnDartLauncher.DART_LAUNCH);
 				Debug.Log ("Throws done: " + i);
             }
-            continueSound.Play();
-            var n_mii = Instantiate(mii);
-            n_mii.transform.position = new Vector3(0, 1, 4);
-            StartCoroutine(CountMisses());
 
-            bool mii_hit = false;
+
+            continueSound.Play();
 
             driftSlide.SetActive(true);
             doHandFlip = false;
@@ -223,19 +223,34 @@ namespace McHorseface.LawnDart
 			hand4.SetActive(false);
             trySlide.SetActive(false);
             anim.SetTrigger("flip");
-			EventRegistry.instance.AddEventListener(MiiAnimationController.MII_HIT, () => mii_hit = true);
             //apply an arbitrary rotation to to force calibration
             LDController.instance.StartDrift();
             yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_END);
             LDController.instance.StopDrift();
 
+            var n_mii = Instantiate(mii);
+            var _c = n_mii.GetComponentInChildren<MiiAnimationController>();
+            if (_c.gender == MiiGender.Random) _c.gender = Random.value > 0.5f ? MiiGender.Male : MiiGender.Female;
+            n_mii.transform.position = new Vector3(0, 1, 4);
 
+            killSlide.text = "Kill " + (_c.gender == MiiGender.Male ? "him" : "her") + "!";
+            killSlide.gameObject.SetActive(true);
+            driftSlide.SetActive(false);
+            anim.SetTrigger("flip");
+            doHandFlip = true;
+            StartCoroutine(FlipHands());
 
-            // whenever a button_4_off is sent, a button_off is also sent
-            if (!mii_hit)
-            {
-                yield return new WaitForEvent(MiiAnimationController.MII_HIT);
-            }
+            StartCoroutine(CountMisses());
+            
+            yield return new WaitForEvent(MiiAnimationController.MII_HIT);
+            continueSound.Play();
+            doHandFlip = false;
+            hand0.SetActive(false);
+            hand1.SetActive(false);
+            hand2.SetActive(false);
+            hand3.SetActive(false);
+            hand4.SetActive(false);
+
             doCountMisses = false;
             anim.SetTrigger("hide");
 
@@ -256,7 +271,7 @@ namespace McHorseface.LawnDart
 			hand2.SetActive(false);
 			hand3.SetActive(false);
 			hand4.SetActive(false);
-            driftSlide.SetActive(false);
+            killSlide.gameObject.SetActive(false);
             trySlide.SetActive(false);
             continueSound.Play();
 

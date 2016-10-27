@@ -3213,6 +3213,7 @@ RectTransform:
   - {fileID: 1775764075}
   - {fileID: 277070558}
   - {fileID: 299099706}
+  - {fileID: 637743855}
   m_Father: {fileID: 1929496147}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
@@ -3396,6 +3397,7 @@ MonoBehaviour:
   - {fileID: 1987334986}
   - {fileID: 170875813}
   - {fileID: 1904728198}
+  killSlide: {fileID: 637743856}
   mii: {fileID: 1000010790565182, guid: cd3dc8b22c35fc5429d040f555f9b23d, type: 2}
   warp:
   - {fileID: 187552394}
@@ -5298,6 +5300,84 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 631370775}
   m_Mesh: {fileID: 4300114, guid: 6395ce4c6cde6a94b9f2412613495cb0, type: 3}
+--- !u!1 &637743854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1000011956028322, guid: 86ddc30e72a2bf14a8fd353c15a7420c,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 637743855}
+  - 222: {fileID: 637743857}
+  - 114: {fileID: 637743856}
+  m_Layer: 5
+  m_Name: killher!
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &637743855
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 224000011740517772, guid: 86ddc30e72a2bf14a8fd353c15a7420c,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 637743854}
+  m_LocalRotation: {x: 1.776357e-15, y: -0.000000029802308, z: -1.1250061e-15, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.047}
+  m_LocalScale: {x: 0.0050000004, y: 0.0049999994, z: 0.0050000004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 366232668}
+  m_RootOrder: 14
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -1.038, y: -5.016}
+  m_SizeDelta: {x: 1172.17, y: 246.14}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &637743856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114000012527492692, guid: 86ddc30e72a2bf14a8fd353c15a7420c,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 637743854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 5f553d07a3e20c44da7a971aea629054, type: 3}
+    m_FontSize: 112
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 6
+    m_MaxSize: 133
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: Kill her!
+--- !u!222 &637743857
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 222000012267609906, guid: 86ddc30e72a2bf14a8fd353c15a7420c,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 637743854}
 --- !u!1001 &646170718
 Prefab:
   m_ObjectHideFlags: 0
@@ -11527,7 +11607,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1451159435
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11580,8 +11660,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "Press and release \nthe screen to \ntoss lawn dart.\nSwing phone \nfor
-    additional force."
+  m_Text: "Press and release \nthe phone screen to \ntoss lawn dart.\nSwing phone
+    \nfor additional force."
 --- !u!222 &1451159437
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15143,7 +15223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1911111379
 RectTransform:
   m_ObjectHideFlags: 0

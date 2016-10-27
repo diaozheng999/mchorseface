@@ -35,6 +35,10 @@ namespace McHorseface.LawnDart
         {
 			Debug.Log ("DartController: Collided!");
 			Debug.Log ("DartController: dartTriggerEnter:" + dartTriggerEnter + ", targetTriggerEnter:" + targetTriggerEnter);
+            if (other.GetComponent<PhaseBoard>() != null)
+            {
+                return;
+            }
             if (hit != null) hit.Play();
 
             
@@ -52,17 +56,15 @@ namespace McHorseface.LawnDart
 				Destroy (rb.gameObject);
 			}
 
-            else if (other.GetComponent<PhaseBoard>() != null)
-            {
-                return;
-            }
-
             else if (rb != null)
             {
 				rb.isKinematic = true;
                 if (other.CompareTag("WarpTarget"))
                 {
 					dartTriggerEnter = true;
+                }else
+                {
+                    targetTriggerEnter = true;
                 }
             }
             

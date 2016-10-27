@@ -30,7 +30,7 @@ namespace McHorseface.LawnDart
         Texture aimFace;
 
         [SerializeField]
-        float xViewRange = 0.1f;
+        float xViewRange = 0.15f;
 
         [SerializeField]
         float yViewRange = 0.5f;
@@ -85,7 +85,7 @@ namespace McHorseface.LawnDart
 
         public void Reposition()
         {
-            collapsed.transform.position = Player.instance.transform.position + Vector3.ProjectOnPlane(3f * (-.3f * Camera.main.transform.forward - Camera.main.transform.right), Vector3.up);
+            collapsed.transform.position = Player.instance.transform.position + Vector3.ProjectOnPlane(3f * (-.5f * Camera.main.transform.forward + Camera.main.transform.right), Vector3.up);
         }
 
         protected override UnityCoroutine DoWave()

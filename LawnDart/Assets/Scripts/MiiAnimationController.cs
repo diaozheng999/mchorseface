@@ -6,15 +6,14 @@ using PGT.Core;
 
 namespace McHorseface.LawnDart
 {
-    enum MiiGender {
+    public enum MiiGender {
         Male, Female, Random
     }
     public class MiiAnimationController : MonoBehaviour {
 
         public bool doBlood = true;
-
-        [SerializeField]
-        MiiGender gender = MiiGender.Random;
+        
+        public MiiGender gender = MiiGender.Random;
 
         [SerializeField]
         GameObject[] maleBodies;
@@ -143,7 +142,7 @@ namespace McHorseface.LawnDart
             EventRegistry.instance.AddEventListener("killall", () => Fragment(Vector3.zero), false);
 
 			audio = GetComponent<AudioSource> ();
-			audio.pitch += Random.value - 0.5f;
+			audio.pitch += (Random.value - 0.5f) * 0.05f;
 
 			hitListener = EventRegistry.instance.AddEventListener (LawnDartLauncher.DART_LAUNCH, () => {
 				var accel = LDController.instance.Accel.sqrMagnitude / 10;
@@ -242,6 +241,7 @@ namespace McHorseface.LawnDart
 
 		void OnDestroy(){
 			EventRegistry.instance.RemoveEventListener (LawnDartLauncher.DART_LAUNCH, hitListener);
+            EventRegistry.instance.RemoveEventListener(MII_HIT, scaredListener);
 		}
     }
 }
