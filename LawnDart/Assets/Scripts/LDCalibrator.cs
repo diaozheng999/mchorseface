@@ -167,26 +167,28 @@ namespace McHorseface.LawnDart
 
             gazeOffListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_OFF, () =>
             {
+                anim.SetTrigger("flip");
                 gazeSlide.text = "Look at Callie";
             }, true);
 
             gazeOnListener = EventRegistry.instance.AddEventListener(CalibrationMiiController.GAZE_ON, () =>
             {
-                gazeSlide.text = "Hold the phone up to your ear";
+                anim.SetTrigger("flip");
+                gazeSlide.text = "Hold the phone up to your ear and keep it steady";
             }, true);
 
-            yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_START);
+            //yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_START);
 
-            anim.SetTrigger("flip");
 
-            continueSound.Play();
-            calibrationSlide.SetActive(true);
-            gazeSlide.gameObject.SetActive(false);
+            //continueSound.Play();
+            //calibrationSlide.SetActive(true);
+            //gazeSlide.gameObject.SetActive(false);
             
-            EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_ON, gazeOnListener);
-            EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_OFF, gazeOffListener);
 
             yield return new WaitForEvent(CalibrationMiiController.CALIB_SEQ_END);
+
+            EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_ON, gazeOnListener);
+            EventRegistry.instance.RemoveEventListener(CalibrationMiiController.GAZE_OFF, gazeOffListener);
 
             anim.SetTrigger("flip");
 
@@ -260,7 +262,7 @@ namespace McHorseface.LawnDart
                     (Vector3 pos) => anim2.transform.position = pos,
                     Vector3.Lerp,
                     Vector3.Distance,
-                    new Vector3(0f, 0f, 14f),
+                    new Vector3(0f, 0.8f, 14f),
                     2f, (object p) => { anim.SetTrigger("show"); }));
 
             yield return new WaitForSeconds(1.5f);
